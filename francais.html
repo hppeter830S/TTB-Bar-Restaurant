@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTB Bar & Restaurant — Burundi (Français)</title>
+  <meta name="description" content="TTB Bar & Restaurant — Cuisine premium, boissons, cérémonies, réunions et moments inoubliables au Burundi." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Boutons réseaux sociaux avec icônes réelles */
+    .social-icon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--white);
+      text-decoration: none;
+      transition: all var(--transition);
+      border: 2px solid rgba(255,255,255,0.12);
+    }
+    .social-icon-link.wa  { background: #075E54; border-color:#075E54; }
+    .social-icon-link.fb  { background: #1877F2; border-color:#1877F2; }
+    .social-icon-link.gm  { background: #EA4335; border-color:#EA4335; }
+    .social-icon-link.ph  { background: #27AE60; border-color:#27AE60; }
+    .social-icon-link:hover { transform: translateY(-3px); filter: brightness(1.15); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+    .social-contact-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    /* Accent section boissons */
+    .drinks-badge { background: rgba(59,175,218,0.12); border: 1px solid rgba(59,175,218,0.3); color: var(--blue); }
+    .drink-card .food-img { background: linear-gradient(135deg,#0d1a22,#0a2030); }
+    .drink-card .food-badge { background: var(--blue-dark); }
+    .drink-price { color: var(--blue) !important; }
+  </style>
+</head>
+<body>
+
+  <input type="checkbox" id="nav-toggle" hidden />
+
+  <!-- ============================================================
+       EN-TÊTE
+       ============================================================ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="francais.html" class="logo-wrap">
+        <img style="border-radius:50%;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" onerror="this.style.display='none'" />
+        <span class="logo-text"><span>TTB</span> Bar & Restaurant</span>
+      </a>
+      <nav class="main-nav" aria-label="Navigation principale">
+        <a href="#accueil" class="active">Accueil</a>
+        <a href="#services">Services</a>
+        <a href="#menu-apercu">Menu</a>
+        <!-- Galerie liée à sa propre page -->
+        <a href="gallery.html">Galerie</a>
+        <a href="#contact">Contact</a>
+        <a href="menu.html" class="btn btn-primary" style="padding:7px 16px;font-size:0.82rem;">📋 Commander</a>
+      </nav>
+      <div class="lang-nav">
+        <a href="index.html"    class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/greatBretainIcon.png" alt="EN"> EN</a>
+        <a href="francais.html" class="lang-btn active"><img style="width:15px;height:15px;border-radius:50%;" src="images/franceIcon.png" alt="FR"> FR</a>
+        <a href="kirundi.html"  class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/burundiIcon.png" alt="KI"> KI</a>
+        <a href="swahili.html"  class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/tanzaniaIcon.png" alt="SW"> SW</a>
+      </div>
+      <label for="nav-toggle" class="menu-toggle" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- Menu mobile — DOIT être EN DEHORS du header pour que le CSS fonctionne -->
+  <nav class="mobile-nav" aria-label="Navigation mobile">
+    <a href="#accueil">Accueil</a>
+    <a href="#services">Services</a>
+    <a href="#menu-apercu">Menu</a>
+    <a href="gallery.html">Galerie</a>
+    <a href="#contact">Contact</a>
+    <a href="menu.html">📋 Commander</a>
+    <div class="lang-row">
+      <a href="index.html"    class="lang-btn">🇬🇧 EN</a>
+      <a href="francais.html" class="lang-btn active">🇫🇷 FR</a>
+      <a href="kirundi.html"  class="lang-btn">🇧🇮 KI</a>
+      <a href="swahili.html"  class="lang-btn">🇹🇿 SW</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" id="accueil">
+    <div class="hero-bg">
+      <img src="images/ttbImg11.jpeg" alt="TTB Bar & Restaurant ambiance" />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+      <div class="hero-badge">✨ Restauration Premium au Burundi</div>
+      <h1 class="hero-title">Bienvenue au <em>TTB</em><br />Bar &amp; Restaurant</h1>
+      <p class="hero-sub">Cuisine, boissons, cérémonies, réunions &amp; moments inoubliables — tout en un seul endroit.</p>
+      <div class="hero-actions">
+        <a href="menu.html" class="btn btn-primary">📋 Voir le Menu</a>
+        <a href="https://wa.me/25768857061?text=Bonjour%20TTB%20Bar%20%26%20Restaurant%2C%20je%20voudrais%20faire%20une%20r%C3%A9servation%20pour%20___%20personnes%20le%20___" class="btn btn-outline">📅 Réserver</a>
+      </div>
+    </div>
+    <div class="hero-scroll">Défiler</div>
+  </section>
+
+  <!-- ============================================================
+       SERVICES
+       ============================================================ -->
+  <section class="section section-dark2" id="services">
+    <div class="container">
+      <span class="section-label">Ce Que Nous Offrons</span>
+      <h2 class="section-title">Nos Services</h2>
+      <div class="divider"></div>
+      <p class="section-subtitle">Des dîners intimes aux grandes cérémonies — TTB offre l'excellence à chaque expérience.</p>
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg16.png" alt="Restaurant" onerror="this.parentElement.innerHTML='🍽️'" /></div>
+          <div class="service-icon">🍽️</div>
+          <h3>Restaurant</h3>
+          <p>Savourez des plats africains et internationaux soigneusement préparés dans notre salle élégante.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg15.png" alt="Bar & Cocktails" onerror="this.parentElement.innerHTML='🍹'" /></div>
+          <div class="service-icon">🍹</div>
+          <h3>Bar &amp; Cocktails</h3>
+          <p>Spiritueux premium, cocktails artisanaux, bières locales et boissons soft pour tous les goûts.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg17.png" alt="Livraison à Domicile" onerror="this.parentElement.innerHTML='🛵'" /></div>
+          <div class="service-icon">🛵</div>
+          <h3>Livraison à Domicile</h3>
+          <p>Profitez des saveurs TTB chez vous. Livraison rapide et fraîche à votre porte.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg14.png" alt="Gâteaux d'Anniversaire" onerror="this.parentElement.innerHTML='🎂'" /></div>
+          <div class="service-icon">🎂</div>
+          <h3>Gâteaux d'Anniversaire</h3>
+          <p>Gâteaux de célébration faits avec amour — parfaits pour chaque anniversaire et moment spécial.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg13.png" alt="Traiteur" onerror="this.parentElement.innerHTML='🍱'" /></div>
+          <div class="service-icon">🍱</div>
+          <h3>Services Traiteur</h3>
+          <p>Traiteur professionnel pour tout type d'événement — frais, délicieux et toujours à l'heure.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg18.png" alt="Cérémonies & Événements" onerror="this.parentElement.innerHTML='🎉'" /></div>
+          <div class="service-icon">🎉</div>
+          <h3>Cérémonies &amp; Événements</h3>
+          <p>Mariages, anniversaires, fêtes — nous transformons chaque occasion en chef-d'œuvre.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/ttbImg19.png" alt="Salles de Réunion" onerror="this.parentElement.innerHTML='💼'" /></div>
+          <div class="service-icon">💼</div>
+          <h3>Salles de Réunion</h3>
+          <p>Espaces professionnels entièrement équipés pour événements d'entreprise et rassemblements privés.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap"><img src="images/imyidagaduro.png" alt="Divertissement" onerror="this.parentElement.innerHTML='🎵'" /></div>
+          <div class="service-icon">🎵</div>
+          <h3>Divertissement</h3>
+          <p>Musique live, soirées DJ et événements à thème — l'ambiance parfaite pour chaque humeur.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PLATS VEDETTES (NOURRITURE)
+       ============================================================ -->
+  <section class="section section-dark" id="menu-apercu">
+    <div class="container">
+      <div class="menu-section-head">
+        <div>
+          <span class="section-label">Goûtez la Différence</span>
+          <h2 class="section-title">🍽️ Plats Vedettes</h2>
+          <div class="divider"></div>
+        </div>
+        <a href="menu.html" class="btn btn-outline">Voir le Menu Complet →</a>
+      </div>
+      <div class="cards-row">
+
+        <div class="food-card">
+          <div class="food-img">
+            <img src="images/ttbKebabAlaViande.png" alt="Kebab à la Viande" onerror="this.parentElement.innerHTML='🌮'" />
+            <span class="food-badge">Populaire</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Kebab à la Viande</div>
+            <div class="food-desc">Viande grillée tendre, légumes frais et sauce maison dans un pain moelleux.</div>
+            <div class="food-footer">
+              <span class="food-price">15,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Kebab%20%C3%A0%20la%20Viande%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-card">
+          <div class="food-img">
+            <img src="images/ttbIgisahani.png" alt="Igisahani" onerror="this.parentElement.innerHTML='🍱'" />
+            <span class="food-badge">Choix du Chef</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Plat 5 Personnes (Igisahani)</div>
+            <div class="food-desc">Grand plat généreux à partager — riz, haricots, légumes et viande.</div>
+            <div class="food-footer">
+              <span class="food-price">50,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Igisahani%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-card">
+          <div class="food-img">
+            <img src="images/ttbTomsonGrille.png" alt="Tomson Grillé" onerror="this.parentElement.innerHTML='🐟'" />
+          </div>
+          <div class="food-body">
+            <div class="food-name">Tomson Grillé</div>
+            <div class="food-desc">Poisson frais grillé aux herbes, savoureux et parfaitement doré au feu.</div>
+            <div class="food-footer">
+              <span class="food-price">20,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Tomson%20Grill%C3%A9%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-card">
+          <div class="food-img">
+            <img src="images/ttbJarretRoti.png" alt="Jarret Rôti" onerror="this.parentElement.innerHTML='🍖'" />
+            <span class="food-badge">Signature</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Jarret Rôti</div>
+            <div class="food-desc">Jarret tendre rôti lentement au four, juteux et riche en saveurs.</div>
+            <div class="food-footer">
+              <span class="food-price">30,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Jarret%20R%C3%B4ti%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BOISSONS VEDETTES ← NOUVELLE SECTION
+       ============================================================ -->
+  <section class="section section-dark2" id="boissons-apercu">
+    <div class="container">
+      <div class="menu-section-head">
+        <div>
+          <span class="section-label drinks-badge">Rafraîchissez-vous</span>
+          <h2 class="section-title">🍹 Boissons Vedettes</h2>
+          <div class="divider" style="background:linear-gradient(90deg,var(--blue),var(--green));"></div>
+        </div>
+        <a href="menu.html#drinks" class="btn btn-outline">Voir Toutes les Boissons →</a>
+      </div>
+      <div class="cards-row">
+
+        <!-- Boisson 1 — Thé Vert -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/primus.png" alt="Primus" onerror="this.parentElement.innerHTML='🍵'" />
+            <span class="food-badge">Chaud</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Primus</div>
+            <div class="food-desc">Bière locale rafraîchissante avec un goût équilibré et authentique.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">3,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Primus%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boisson 2 — Café Africain -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/heineken.png" alt="Heineken" onerror="this.parentElement.innerHTML='☕'" />
+            <span class="food-badge">Signature</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Heineken</div>
+            <div class="food-desc">Bière internationale premium avec un goût frais et raffiné.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">7,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Heineken%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boisson 3 — Tangawizi -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/vinEnBouteille.png" alt="Tangawizi" onerror="this.parentElement.innerHTML='🫚'" />
+            <span class="food-badge">Populaire</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Wine</div>
+            <div class="food-desc">Bouteille de vin sélectionnée, aux arômes riches et raffinés.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">4,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Wine%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boisson 4 — Thé G.C.M -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/amsterRoyale.png" alt="Amster Royale" onerror="this.parentElement.innerHTML='🍵'" />
+            <span class="food-badge">Spécial</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Amster Royale</div>
+            <div class="food-desc">Bière raffinée avec un caractère élégant.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">8,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20commander%201x%20Amster%20Royale%20%28Table%20%2F%20Livraison%3A%20__________%29" class="btn btn-green">🛒 Commander</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section class="section section-dark3" id="contact">
+    <div class="container">
+      <span class="section-label">Nous Trouver</span>
+      <h2 class="section-title">Contact &amp; Localisation</h2>
+      <div class="divider"></div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="icon">📍</div>
+          <h4>Adresse</h4>
+          <p>TTB Bar &amp; Restaurant<br />Butanyerera / Ngozi<br />Burundi</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">🕐</div>
+          <h4>Horaires d'Ouverture</h4>
+          <p>Tous les Jours<br />6h00 – Minuit</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">✉️</div>
+          <h4>Email</h4>
+          <p><a href="mailto:info@ttbrestaurant.bi">info@ttbrestaurant.bi</a></p>
+        </div>
+      </div>
+
+      <!-- Boutons réseaux sociaux réels -->
+      <div class="social-contact-row">
+
+        <a href="https://wa.me/25768857061?text=Bonjour%20TTB!" class="social-icon-link wa">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm0 23.85a10.83 10.83 0 0 1-5.52-1.52l-.4-.24-4.06.95.99-3.95-.26-.41A10.85 10.85 0 1 1 16 26.85zm5.95-8.13c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+          WhatsApp
+        </a>
+
+        <a href="https://facebook.com/your-ttb-page" target="_blank" class="social-icon-link fb">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M29 16C29 9.37 23.63 4 17 4S5 9.37 5 16c0 6 4.39 10.99 10.13 11.85V19.7h-3.05V16h3.05v-2.65c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88V16h3.33l-.53 3.7H18.9v8.15C24.61 26.99 29 22 29 16z"/></svg>
+          Facebook
+        </a>
+
+        <a href="mailto:info@ttbrestaurant.bi" class="social-icon-link gm">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M26 6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm0 2-10 7L6 8h20zm0 16H6V10l10 7 10-7v14z"/></svg>
+          Nous Écrire
+        </a>
+
+        <a href="tel:+25768857061" class="social-icon-link ph">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M26.5 20.5c-1.5-1-3.1-1.6-4.5-.6l-1.8 1.3c-.5.3-1.1.2-1.5-.2-1.3-1.2-3.4-3.3-4.6-4.6-.4-.4-.5-1-.2-1.5l1.3-1.8c1-1.4.4-3-.6-4.5L13 6.7C11.9 5.2 10 5 8.7 6.2L7 7.8C5 9.8 5.5 13.2 8 17.5c2 3.5 4.8 6.4 8 8.5 4.5 2.8 7.8 2.8 9.7.8l1.5-1.7c1.2-1.3 1-3.1-.2-4.1l-1.5-1.1-1 1z"/></svg>
+          Appeler
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PIED DE PAGE
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <img style="width:50px;height:50px;border-radius:50%;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" />
+            <span class="logo-text"><span>TTB</span> Bar &amp; Restaurant</span>
+          </div>
+          <p>Restauration premium, cocktails, cérémonies &amp; divertissement au cœur du Burundi.</p>
+          <div class="social-row" style="margin-top:14px;">
+            <a href="https://facebook.com/your-ttb-page" class="social-btn" title="Facebook">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M29 16C29 9.37 23.63 4 17 4S5 9.37 5 16c0 6 4.39 10.99 10.13 11.85V19.7h-3.05V16h3.05v-2.65c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88V16h3.33l-.53 3.7H18.9v8.15C24.61 26.99 29 22 29 16z"/></svg>
+            </a>
+            <a href="https://wa.me/25768857061" class="social-btn" title="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+            </a>
+            <a href="mailto:info@ttbrestaurant.bi" class="social-btn" title="Email">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M26 6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm0 2-10 7L6 8h20zm0 16H6V10l10 7 10-7v14z"/></svg>
+            </a>
+            <a href="tel:+25768857061" class="social-btn" title="Appeler">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M26.5 20.5c-1.5-1-3.1-1.6-4.5-.6l-1.8 1.3c-.5.3-1.1.2-1.5-.2-1.3-1.2-3.4-3.3-4.6-4.6-.4-.4-.5-1-.2-1.5l1.3-1.8c1-1.4.4-3-.6-4.5L13 6.7C11.9 5.2 10 5 8.7 6.2L7 7.8C5 9.8 5.5 13.2 8 17.5c2 3.5 4.8 6.4 8 8.5 4.5 2.8 7.8 2.8 9.7.8l1.5-1.7c1.2-1.3 1-3.1-.2-4.1l-1.5-1.1-1 1z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Liens Rapides</h5>
+          <ul>
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#menu-apercu">Menu</a></li>
+            <li><a href="gallery.html">Galerie</a></li>
+            <li><a href="menu.html">Commander en Ligne</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#services">Restaurant</a></li>
+            <li><a href="#services">Bar &amp; Cocktails</a></li>
+            <li><a href="#services">Livraison</a></li>
+            <li><a href="#services">Cérémonies</a></li>
+            <li><a href="#services">Salles de Réunion</a></li>
+            <li><a href="#services">Divertissement</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Horaires</h5>
+          <div class="footer-hours">
+            <span><strong>Tous les Jours</strong><br />6h00 – Minuit</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 TTB Bar &amp; Restaurant. Tous droits réservés.</span>
+        <span>Propulsé par <a href="https://hppeter830s.github.io/hppetertechstudio/" target="_blank" rel="noopener">HP PETER TECH STUDIO</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/25768857061?text=Bonjour%20TTB%20Bar%20%26%20Restaurant!" class="whatsapp-float" title="Discuter sur WhatsApp">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+  </a>
+  <a href="#accueil" class="scroll-top" title="Haut de page">↑</a>
+
+</body>
+</html>

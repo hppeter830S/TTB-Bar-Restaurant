@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTB Bar & Restaurant — Menu & Order</title>
+  <meta name="description" content="Order food and drinks from TTB Bar & Restaurant via WhatsApp." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: var(--dark); }
+
+    /* ── Language & tab radio inputs hidden ── */
+    #mlang-fr,#mlang-en,#mlang-ki,#mlang-sw,
+    #tab-food,#tab-drinks { display:none; }
+
+    /* ── Language content: hide all, show selected ── */
+    .t { display:none; }
+    #mlang-fr:checked ~ * .t-fr,
+    #mlang-fr:checked ~ .t-fr { display:inline; }
+    #mlang-en:checked ~ * .t-en,
+    #mlang-en:checked ~ .t-en { display:inline; }
+    #mlang-ki:checked ~ * .t-ki,
+    #mlang-ki:checked ~ .t-ki { display:inline; }
+    #mlang-sw:checked ~ * .t-sw,
+    #mlang-sw:checked ~ .t-sw { display:inline; }
+
+    /* block-level translated elements */
+    .tb { display:none; }
+    #mlang-fr:checked ~ * .tb-fr,
+    #mlang-fr:checked ~ .tb-fr { display:block; }
+    #mlang-en:checked ~ * .tb-en,
+    #mlang-en:checked ~ .tb-en { display:block; }
+    #mlang-ki:checked ~ * .tb-ki,
+    #mlang-ki:checked ~ .tb-ki { display:block; }
+    #mlang-sw:checked ~ * .tb-sw,
+    #mlang-sw:checked ~ .tb-sw { display:block; }
+
+    /* ── FOOD / DRINKS panels ── */
+    .main-panel { display:none; }
+    #tab-food:checked   ~ .wrap .panel-food   { display:block; }
+    #tab-drinks:checked ~ .wrap .panel-drinks { display:block; }
+
+    /* ── Main tab bar ── */
+    .main-tab-bar {
+      display:flex;
+      background:var(--dark2);
+      border-bottom:3px solid rgba(255,255,255,0.07);
+      position:sticky; top:0; z-index:97;
+    }
+    .mtl {
+      flex:1; display:flex; align-items:center; justify-content:center;
+      gap:8px; padding:15px 10px;
+      font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
+      color:var(--gray); cursor:pointer; transition:all var(--transition);
+      border-bottom:3px solid transparent; margin-bottom:-3px;
+      user-select:none;
+    }
+    .mtl:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    #tab-food:checked   ~ .wrap .main-tab-bar .mtl[for="tab-food"]   { color:var(--white); border-bottom-color:var(--red);  background:rgba(192,57,43,0.12); }
+    #tab-drinks:checked ~ .wrap .main-tab-bar .mtl[for="tab-drinks"] { color:var(--white); border-bottom-color:var(--blue); background:rgba(59,175,218,0.12); }
+
+    /* ── Category subcategory tabs ── */
+    .cat-tabs {
+      display:flex; flex-wrap:wrap; gap:7px;
+      padding:10px 14px 12px;
+      background:var(--dark3);
+      border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+
+    /* ── Cards grid ── */
+    .qr-cards { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; padding:0 14px 12px; }
+    @media(min-width:600px){ .qr-cards{ grid-template-columns:repeat(3,1fr); } }
+    @media(min-width:900px){ .qr-cards{ grid-template-columns:repeat(4,1fr); } }
+    @media(max-width:360px){ .qr-cards{ grid-template-columns:1fr; } }
+
+    /* ── Card style ── */
+    .qr-card {
+      background:var(--dark2); border:1px solid rgba(255,255,255,0.07);
+      border-radius:var(--radius); overflow:hidden;
+      display:flex; flex-direction:column; transition:all var(--transition);
+    }
+    .qr-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:rgba(255,255,255,0.14); }
+    .qr-card .fi { height:110px; background:linear-gradient(135deg,#1e1e1e,#2a2a2a); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--gray); overflow:hidden; position:relative; }
+    .qr-card .fi img { width:100%; height:100%; object-fit:cover; }
+    .qr-card .fb { padding:10px 11px 13px; flex:1; display:flex; flex-direction:column; gap:4px; }
+    .qr-card .fn { font-family:'Playfair Display',serif; font-size:0.88rem; font-weight:600; color:var(--white); line-height:1.3; }
+    .qr-card .fp { font-size:0.9rem; font-weight:700; color:var(--gold); margin-top:auto; padding-top:6px; }
+    .qr-card .ob { display:flex; align-items:center; justify-content:center; gap:5px; width:100%; padding:8px 10px; font-size:0.78rem; border-radius:8px; margin-top:8px; background:var(--green); color:#fff; border:2px solid var(--green); text-decoration:none; font-weight:600; transition:all var(--transition); }
+    .qr-card .ob:hover { background:var(--green-light); border-color:var(--green-light); transform:translateY(-2px); }
+
+    /* drink card accent */
+    .dk .fi { background:linear-gradient(135deg,#0a1520,#0d2030); }
+    .dk .fp { color:var(--blue) !important; }
+    .dk .ob { background:var(--blue-dark); border-color:var(--blue-dark); }
+    .dk .ob:hover { background:var(--blue); border-color:var(--blue); }
+
+    /* span 2 cols */
+    .s2 { grid-column:span 2; }
+    @media(max-width:360px){ .s2{ grid-column:span 1; } }
+
+    /* ── Category heading ── */
+    .mcat { padding:22px 14px 6px; }
+    .mcat h3 { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--white); margin-bottom:4px; }
+    .sd { width:36px; height:2px; border-radius:2px; margin:8px 0 16px; background:linear-gradient(90deg,var(--red),var(--blue)); }
+    .sd-b { background:linear-gradient(90deg,var(--blue),var(--green)); }
+
+    /* price badge */
+    .pt { display:inline-block; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.3); border-radius:20px; padding:2px 9px; font-size:0.78rem; font-weight:700; color:var(--gold); margin-top:4px; }
+    .pt-b { background:rgba(59,175,218,0.12); border-color:rgba(59,175,218,0.3); color:var(--blue); }
+
+    /* ── Language label buttons ── */
+    .ll {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:600;
+      color:var(--gray); border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer; transition:all var(--transition); user-select:none;
+    }
+    .ll img { width:15px; height:15px; border-radius:50%; }
+    .ll:hover { color:var(--white); border-color:var(--gold); background:rgba(201,168,76,0.1); }
+    #mlang-fr:checked ~ * .ll[for="mlang-fr"],
+    #mlang-en:checked ~ * .ll[for="mlang-en"],
+    #mlang-ki:checked ~ * .ll[for="mlang-ki"],
+    #mlang-sw:checked ~ * .ll[for="mlang-sw"] { color:var(--white); border-color:var(--gold); background:rgba(201,168,76,0.15); }
+
+    /* ── Welcome hero with logo background ── */
+    .qwh {
+      position:relative; text-align:center;
+      padding:28px 20px 20px;
+      border-bottom:1px solid rgba(255,255,255,0.07);
+      overflow:hidden;
+    }
+    .qwh::before {
+      content:''; position:absolute; inset:0;
+      background-image:url('images/ttbBarRestaurantLogo.jpeg');
+      background-size:cover; background-position:center;
+      filter:blur(8px) brightness(0.2); transform:scale(1.1); z-index:0;
+    }
+    .qwh > * { position:relative; z-index:1; }
+    .qwh img.ql { width:60px; height:60px; border-radius:50%; border:3px solid rgba(255,255,255,0.3); margin:0 auto 10px; display:block; object-fit:cover; }
+    .qwh h2 { font-family:'Playfair Display',serif; font-size:1.35rem; color:var(--white); margin-bottom:4px; }
+    .qwh p  { font-size:0.84rem; color:rgba(255,255,255,0.7); margin-bottom:12px; }
+
+    /* menu footer */
+    .mf { text-align:center; padding:28px 16px 20px; color:var(--gray); font-size:0.82rem; border-top:1px solid rgba(255,255,255,0.06); }
+    .mf a { color:var(--gold); font-weight:600; }
+  </style>
+</head>
+<body>
+
+<!-- ── Radio inputs: languages (fr default) ── -->
+<input type="radio" name="ml" id="mlang-fr" checked />
+<input type="radio" name="ml" id="mlang-en" />
+<input type="radio" name="ml" id="mlang-ki" />
+<input type="radio" name="ml" id="mlang-sw" />
+
+<!-- ── Radio inputs: food/drinks tabs (food default) ── -->
+<input type="radio" name="mt" id="tab-food" checked />
+<input type="radio" name="mt" id="tab-drinks" />
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header style="background:var(--dark2);border-bottom:1px solid rgba(255,255,255,0.07);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:99;">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <img style="width:36px;height:36px;border-radius:50%;object-fit:cover;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" onerror="this.style.display='none'" />
+    <span class="logo-text"><span>TTB</span> Bar & Restaurant</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+    <a href="index.html" class="lang-btn" style="font-size:0.78rem;">🏠</a>
+    <label class="ll" for="mlang-en"><img src="images/greatBretainIcon.png" alt="EN"> EN</label>
+    <label class="ll" for="mlang-fr"><img src="images/franceIcon.png" alt="FR"> FR</label>
+    <label class="ll" for="mlang-ki"><img src="images/burundiIcon.png" alt="KI"> KI</label>
+    <label class="ll" for="mlang-sw"><img src="images/tanzaniaIcon.png" alt="SW"> SW</label>
+  </div>
+</header>
+
+<!-- ============================================================
+     WELCOME HERO — logo as blurred background
+     ============================================================ -->
+<div class="qwh">
+  <img class="ql" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" />
+  <h2>
+    <span class="t t-fr">🍽️ Notre Menu</span>
+    <span class="t t-en">🍽️ Our Menu</span>
+    <span class="t t-ki">🍽️ Menyu Yacu</span>
+    <span class="t t-sw">🍽️ Menyu Yetu</span>
+  </h2>
+  <p>
+    <span class="t t-fr">Choisissez votre plat ou boisson et commandez via WhatsApp</span>
+    <span class="t t-en">Choose your food or drink and order directly via WhatsApp</span>
+    <span class="t t-ki">Hitamo ibiribwa canke inzoga maze ucūre kuri WhatsApp</span>
+    <span class="t t-sw">Chagua chakula au kinywaji na uagize kupitia WhatsApp</span>
+  </p>
+  <a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20voudrais%20passer%20une%20commande!" class="btn btn-green" style="display:inline-flex;margin:0 auto;">
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+    WhatsApp
+  </a>
+</div>
+
+<!-- ============================================================
+     ALL CONTENT INSIDE .wrap (needed for CSS sibling selectors)
+     ============================================================ -->
+<div class="wrap">
+
+  <!-- FOOD / DRINKS main tab bar -->
+  <div class="main-tab-bar">
+    <label class="mtl" for="tab-food">🍽️&nbsp;
+      <span class="t t-fr">Nourriture</span><span class="t t-en">Food</span><span class="t t-ki">Ibiribwa</span><span class="t t-sw">Chakula</span>
+    </label>
+    <label class="mtl" for="tab-drinks">🍹&nbsp;
+      <span class="t t-fr">Boissons</span><span class="t t-en">Drinks</span><span class="t t-ki">Inzoga</span><span class="t t-sw">Vinywaji</span>
+    </label>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FOOD PANEL
+       ══════════════════════════════════════════════════════════ -->
+  <div class="main-panel panel-food">
+
+    <!-- Food subcategory tabs -->
+    <div class="cat-tabs">
+      <a href="#tomsons"  class="cat-tab">🐐 Tomsons</a>
+      <a href="#lapins"   class="cat-tab">🐇 <span class="t t-fr">Lapins</span><span class="t t-en">Rabbits</span><span class="t t-ki">Inkwavu</span><span class="t t-sw">Sungura</span></a>
+      <a href="#ragouts"  class="cat-tab">🥘 <span class="t t-fr">Ragoûts</span><span class="t t-en">Stews</span><span class="t t-ki">Ibisozo</span><span class="t t-sw">Mchuzi</span></a>
+      <a href="#jarrets"  class="cat-tab">🍖 Jarrets</a>
+      <a href="#umutwe"   class="cat-tab">🍖 Umutwe</a>
+      <a href="#poulets"  class="cat-tab">🍗 <span class="t t-fr">Poulets</span><span class="t t-en">Chicken</span><span class="t t-ki">Inkoko</span><span class="t t-sw">Kuku</span></a>
+      <a href="#poissons" class="cat-tab">🐟 <span class="t t-fr">Poissons</span><span class="t t-en">Fish</span><span class="t t-ki">Amafi</span><span class="t t-sw">Samaki</span></a>
+      <a href="#salades"  class="cat-tab">🥗 <span class="t t-fr">Salades</span><span class="t t-en">Salads</span><span class="t t-ki">Imboga</span><span class="t t-sw">Saladi</span></a>
+      <a href="#fruits"   class="cat-tab">🍉 <span class="t t-fr">Fruits</span><span class="t t-en">Fruits</span><span class="t t-ki">Imbuto</span><span class="t t-sw">Matunda</span></a>
+      <a href="#thescaf"  class="cat-tab">☕ <span class="t t-fr">Thés &amp; Cafés</span><span class="t t-en">Teas &amp; Coffees</span><span class="t t-ki">Icayi n'Ikawa</span><span class="t t-sw">Chai na Kahawa</span></a>
+      <a href="#omelet"   class="cat-tab">🍳 <span class="t t-fr">Omelettes</span><span class="t t-en">Omelettes</span><span class="t t-ki">Amagi</span><span class="t t-sw">Mayai</span></a>
+      <a href="#soupes"   class="cat-tab">🍲 <span class="t t-fr">Soupes</span><span class="t t-en">Soups</span><span class="t t-ki">Amazi</span><span class="t t-sw">Supu</span></a>
+      <a href="#sandw"    class="cat-tab">🥪 <span class="t t-fr">Sandwichs</span><span class="t t-en">Sandwiches</span><span class="t t-ki">Sandwichi</span><span class="t t-sw">Sandwich</span></a>
+      <a href="#dejeu"    class="cat-tab">🍚 <span class="t t-fr">Déjeuner</span><span class="t t-en">Lunch &amp; Sides</span><span class="t t-ki">Isaha yo Kurya</span><span class="t t-sw">Chakula cha Mchana</span></a>
+    </div>
+
+    <!-- TOMSONS -->
+    <div class="mcat" id="tomsons"><h3>🐐 <span class="t t-fr">Nos Tomsons</span><span class="t t-en">Our Tomsons</span><span class="t t-ki">Abatobuzi Bacu</span><span class="t t-sw">Tomsons Wetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbTomsonGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🐐'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tomson Grillé Accompagné</span><span class="t t-en">Grilled Tomson w/ Sides</span><span class="t t-ki">Tomusooni Yotswe</span><span class="t t-sw">Tomson wa Kukaanga</span></div><div class="pt">20,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tomson%20Grill%C3%A9%20Accompagn%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTomsonRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐐'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tomson Rôti Accompagné</span><span class="t t-en">Roasted Tomson w/ Sides</span><span class="t t-ki">Tomusooni Yoye</span><span class="t t-sw">Tomson wa Kuoka</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tomson%20R%C3%B4ti%20Accompagn%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTomsonProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🐐'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tomson Provençal Accompagné</span><span class="t t-en">Provençal Tomson</span><span class="t t-ki">Tomusooni ya Provençal</span><span class="t t-sw">Tomson Provençal</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tomson%20Proven%C3%A7al%20Accompagn%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- LAPINS -->
+    <div class="mcat" id="lapins"><h3>🐇 <span class="t t-fr">Nos Lapins</span><span class="t t-en">Our Rabbits</span><span class="t t-ki">Inkwavu Zacu</span><span class="t t-sw">Sungura Wetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Lapin Grillé</span><span class="t t-en">Grilled Rabbit</span><span class="t t-ki">Inkwavu Yotswe</span><span class="t t-sw">Sungura wa Kukaanga</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Lapin Provincial</span><span class="t t-en">Provincial Rabbit</span><span class="t t-ki">Inkwavu ya Provincial</span><span class="t t-sw">Sungura Provincial</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20Provincial%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Lapin Rôti</span><span class="t t-en">Roasted Rabbit</span><span class="t t-ki">Inkwavu Yoye</span><span class="t t-sw">Sungura wa Kuoka</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinEntierRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Entier Grillé</span><span class="t t-en">Whole Grilled Rabbit</span><span class="t t-ki">Inkwavu Yose Yotswe</span><span class="t t-sw">Sungura Mzima Kukaanga</span></div><div class="pt">50,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20Entier%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinEntierRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Entier Grillé Provençal</span><span class="t t-en">Whole Provençal Rabbit</span><span class="t t-ki">Inkwavu Yose Provençal</span><span class="t t-sw">Sungura Mzima Provençal</span></div><div class="pt">60,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20Entier%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLapinEntierRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐇'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Lapin Entier Rôti</span><span class="t t-en">Whole Roasted Rabbit</span><span class="t t-ki">Inkwavu Yose Yoye</span><span class="t t-sw">Sungura Mzima Kuoka</span></div><div class="pt">60,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lapin%20Entier%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- RAGOUTS -->
+    <div class="mcat" id="ragouts"><h3>🥘 <span class="t t-fr">Nos Ragoûts</span><span class="t t-en">Our Stews</span><span class="t t-ki">Ibisozo Vyacu</span><span class="t t-sw">Mchuzi Wetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbRagoutGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🥘'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Ragoût Grillé</span><span class="t t-en">Grilled Stew</span><span class="t t-ki">Igisozo Gitotse</span><span class="t t-sw">Mchuzi Kukaanga</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Rago%C3%BBt%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbRagoutProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🥘'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Ragoût Provençal</span><span class="t t-en">Provençal Stew</span><span class="t t-ki">Igisozo Provençal</span><span class="t t-sw">Mchuzi Provençal</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Rago%C3%BBt%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbRagoutRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🥘'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Ragoût Rôti</span><span class="t t-en">Roasted Stew</span><span class="t t-ki">Igisozo Citotse</span><span class="t t-sw">Mchuzi Kuoka</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Rago%C3%BBt%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- JARRETS -->
+    <div class="mcat" id="jarrets"><h3>🍖 <span class="t t-fr">Nos Jarrets</span><span class="t t-en">Our Shanks</span><span class="t t-ki">Amarundi Yacu</span><span class="t t-sw">Miguu Yetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbJarretGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Jarret Grillé</span><span class="t t-en">Grilled Shank</span><span class="t t-ki">Urundi Wotswe</span><span class="t t-sw">Mguu Kukaanga</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Jarret%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbJarretRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Jarret Rôti</span><span class="t t-en">Roasted Shank</span><span class="t t-ki">Urundi Woye</span><span class="t t-sw">Mguu Kuoka</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Jarret%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbJarretProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Jarret Provençal</span><span class="t t-en">Provençal Shank</span><span class="t t-ki">Urundi Provençal</span><span class="t t-sw">Mguu Provençal</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Jarret%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- UMUTWE -->
+    <div class="mcat" id="umutwe"><h3>🍖 Umutwe</h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbDessosseGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Umutwe Désossé Grillé</span><span class="t t-en">Grilled Deboned Umutwe</span><span class="t t-ki">Umutwe Wotswe</span><span class="t t-sw">Umutwe Kukaanga</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Umutwe%20D%C3%A9soss%C3%A9%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbDessosseProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Umutwe Désossé Provençal</span><span class="t t-en">Provençal Umutwe</span><span class="t t-ki">Umutwe Provençal</span><span class="t t-sw">Umutwe Provençal</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Umutwe%20D%C3%A9soss%C3%A9%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbDessosseRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🍖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Umutwe Désossé Rôti</span><span class="t t-en">Roasted Umutwe</span><span class="t t-ki">Umutwe Woye</span><span class="t t-sw">Umutwe Kuoka</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Umutwe%20D%C3%A9soss%C3%A9%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- POULETS -->
+    <div class="mcat" id="poulets"><h3>🍗 <span class="t t-fr">Nos Poulets</span><span class="t t-en">Our Chicken</span><span class="t t-ki">Inkoko Zacu</span><span class="t t-sw">Kuku Wetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletQuartGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">1/4 Poulet Grillé</span><span class="t t-en">1/4 Grilled Chicken</span><span class="t t-ki">1/4 Inkoko Yotswe</span><span class="t t-sw">1/4 Kuku Kukaanga</span></div><div class="pt">25,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%201%2F4%20Poulet%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletQuartRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">1/4 Poulet Rôti</span><span class="t t-en">1/4 Roasted Chicken</span><span class="t t-ki">1/4 Inkoko Yoye</span><span class="t t-sw">1/4 Kuku Kuoka</span></div><div class="pt">30,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%201%2F4%20Poulet%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletDemiProlor.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">1/2 Poulet Prolor</span><span class="t t-en">1/2 Prolor Chicken</span><span class="t t-ki">1/2 Inkoko Prolor</span><span class="t t-sw">1/2 Kuku Prolor</span></div><div class="pt">50,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%201%2F2%20Poulet%20Prolor%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletEntier.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Poulet Entier</span><span class="t t-en">Whole Chicken</span><span class="t t-ki">Inkoko Yose</span><span class="t t-sw">Kuku Mzima</span></div><div class="pt">80,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Poulet%20Entier%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletEntierProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Poulet Entier Provençal</span><span class="t t-en">Whole Provençal Chicken</span><span class="t t-ki">Inkoko Yose Provençal</span><span class="t t-sw">Kuku Mzima Provençal</span></div><div class="pt">90,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Poulet%20Entier%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletEntierAvecSauce.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Poulet Entier avec Sauce</span><span class="t t-en">Whole Chicken with Sauce</span><span class="t t-ki">Inkoko Yose na Sauce</span><span class="t t-sw">Kuku Mzima na Mchuzi</span></div><div class="pt">90,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Poulet%20Entier%20avec%20Sauce%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPouletRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🍗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Poulet Rôti</span><span class="t t-en">Roasted Chicken</span><span class="t t-ki">Inkoko Yoye</span><span class="t t-sw">Kuku Kuoka</span></div><div class="pt">90,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Poulet%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- POISSONS -->
+    <div class="mcat" id="poissons"><h3>🐟 <span class="t t-fr">Nos Poissons</span><span class="t t-en">Our Fish</span><span class="t t-ki">Amafi Yacu</span><span class="t t-sw">Samaki Wetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbSangalaGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sangala Grillé</span><span class="t t-en">Grilled Sangala</span><span class="t t-ki">Isangala Yotswe</span><span class="t t-sw">Sangala Kukaanga</span></div><div class="pt">35,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sangala%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSangalaProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sangala Provençal</span><span class="t t-en">Provençal Sangala</span><span class="t t-ki">Isangala Provençal</span><span class="t t-sw">Sangala Provençal</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sangala%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSangalaRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sangala Rôti</span><span class="t t-en">Roasted Sangala</span><span class="t t-ki">Isangala Yoye</span><span class="t t-sw">Sangala Kuoka</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sangala%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbBrochettePoisson.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Brochette de Poisson</span><span class="t t-en">Fish Skewer</span><span class="t t-ki">Urutsi rw'Ifi</span><span class="t t-sw">Mshikaki wa Samaki</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Brochette%20de%20Poisson%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbMukekeGrille.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Mukeke Grillé</span><span class="t t-en">Grilled Mukeke</span><span class="t t-ki">Umukeke Wotswe</span><span class="t t-sw">Mukeke Kukaanga</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Mukeke%20Grill%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbMukekeRoti.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Mukeke Rôti</span><span class="t t-en">Roasted Mukeke</span><span class="t t-ki">Umukeke Woye</span><span class="t t-sw">Mukeke Kuoka</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Mukeke%20R%C3%B4ti%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbMukekeProvencal.png" loading="lazy" onerror="this.parentElement.innerHTML='🐟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Mukeke Provençal</span><span class="t t-en">Provençal Mukeke</span><span class="t t-ki">Umukeke Provençal</span><span class="t t-sw">Mukeke Provençal</span></div><div class="pt">40,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Mukeke%20Proven%C3%A7al%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- SALADES -->
+    <div class="mcat" id="salades"><h3>🥗 <span class="t t-fr">Nos Salades</span><span class="t t-en">Our Salads</span><span class="t t-ki">Imboga Zacu</span><span class="t t-sw">Saladi Zetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbSaladeTtbUbuzima.png" loading="lazy" onerror="this.parentElement.innerHTML='🥗'"/></div><div class="fb"><div class="fn">Salade TTB (Ubuzima)</div><div class="pt">13,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Salade%20TTB%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSaladeDuJour.png" loading="lazy" onerror="this.parentElement.innerHTML='🥗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Salade du Jour</span><span class="t t-en">Salad of the Day</span><span class="t t-ki">Imboga y'Uyu Musi</span><span class="t t-sw">Saladi ya Leo</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Salade%20du%20Jour%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSaladeMixteAvocat.png" loading="lazy" onerror="this.parentElement.innerHTML='🥗'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Salade Mixte Avocat</span><span class="t t-en">Avocado Mixed Salad</span><span class="t t-ki">Imboga n'Avocat</span><span class="t t-sw">Saladi ya Parachichi</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Salade%20Mixte%20Avocat%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- FRUITS -->
+    <div class="mcat" id="fruits"><h3>🍉 <span class="t t-fr">Nos Fruits</span><span class="t t-en">Our Fruits</span><span class="t t-ki">Imbuto Zacu</span><span class="t t-sw">Matunda Yetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbTranchePapaye.png" loading="lazy" onerror="this.parentElement.innerHTML='🍈'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tranche de Papaye</span><span class="t t-en">Papaya Slice</span><span class="t t-ki">Ibice bya Ipapai</span><span class="t t-sw">Kipande cha Papai</span></div><div class="pt">3,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tranche%20de%20Papaye%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTrancheAnanas.png" loading="lazy" onerror="this.parentElement.innerHTML='🍍'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tranche d'Ananas</span><span class="t t-en">Pineapple Slice</span><span class="t t-ki">Ibice bya Inanasi</span><span class="t t-sw">Kipande cha Nanasi</span></div><div class="pt">3,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tranche%20d%27Ananas%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTranchePasteque.png" loading="lazy" onerror="this.parentElement.innerHTML='🍉'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tranche de Pastèque</span><span class="t t-en">Watermelon Slice</span><span class="t t-ki">Ibice bya Pasiteque</span><span class="t t-sw">Kipande cha Tikiti</span></div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tranche%20de%20Past%C3%A8que%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTrancheAvocat.png" loading="lazy" onerror="this.parentElement.innerHTML='🥑'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Tranche d'Avocat</span><span class="t t-en">Avocado Slice</span><span class="t t-ki">Ibice bya Avocat</span><span class="t t-sw">Kipande cha Parachichi</span></div><div class="pt">3,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tranche%20d%27Avocat%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- THES & CAFES -->
+    <div class="mcat" id="thescaf"><h3>☕ <span class="t t-fr">Nos Thés &amp; Cafés</span><span class="t t-en">Teas &amp; Coffees</span><span class="t t-ki">Icayi n'Ikawa</span><span class="t t-sw">Chai na Kahawa</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbTheVert.png" loading="lazy" onerror="this.parentElement.innerHTML='🍵'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Thé Vert</span><span class="t t-en">Green Tea</span><span class="t t-ki">Icayi Gitoto</span><span class="t t-sw">Chai ya Kijani</span></div><div class="pt">3,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Th%C3%A9%20Vert%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTheNoir.png" loading="lazy" onerror="this.parentElement.innerHTML='🍵'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Thé Noir</span><span class="t t-en">Black Tea</span><span class="t t-ki">Icayi Gishira</span><span class="t t-sw">Chai Nyeusi</span></div><div class="pt">3,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Th%C3%A9%20Noir%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTheAuLait.png" loading="lazy" onerror="this.parentElement.innerHTML='🍵'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Thé au Lait</span><span class="t t-en">Milk Tea</span><span class="t t-ki">Icayi n'Amata</span><span class="t t-sw">Chai na Maziwa</span></div><div class="pt">5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Th%C3%A9%20au%20Lait%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLaitChaud.png" loading="lazy" onerror="this.parentElement.innerHTML='🥛'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Lait Chaud</span><span class="t t-en">Hot Milk</span><span class="t t-ki">Amata Ashushe</span><span class="t t-sw">Maziwa ya Moto</span></div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lait%20Chaud%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTangawizi.png" loading="lazy" onerror="this.parentElement.innerHTML='🫚'"/></div><div class="fb"><div class="fn">Tangawizi</div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tangawizi%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTheGcm.png" loading="lazy" onerror="this.parentElement.innerHTML='🍵'"/></div><div class="fb"><div class="fn">Thé G.C.M</div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Th%C3%A9%20G.C.M%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbCafeNoir.png" loading="lazy" onerror="this.parentElement.innerHTML='☕'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Café Noir</span><span class="t t-en">Black Coffee</span><span class="t t-ki">Ikawa Ntoya</span><span class="t t-sw">Kahawa Nyeusi</span></div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Caf%C3%A9%20Noir%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbCafeAuLait.png" loading="lazy" onerror="this.parentElement.innerHTML='☕'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Café au Lait</span><span class="t t-en">Coffee with Milk</span><span class="t t-ki">Ikawa n'Amata</span><span class="t t-sw">Kahawa na Maziwa</span></div><div class="pt">6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Caf%C3%A9%20au%20Lait%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbCafeAfricain.png" loading="lazy" onerror="this.parentElement.innerHTML='☕'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Café Africain</span><span class="t t-en">African Coffee</span><span class="t t-ki">Ikawa y'Uburundi</span><span class="t t-sw">Kahawa ya Afrika</span></div><div class="pt">7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Caf%C3%A9%20Africain%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- OMELETTES -->
+    <div class="mcat" id="omelet"><h3>🍳 <span class="t t-fr">Nos Omelettes</span><span class="t t-en">Our Omelettes</span><span class="t t-ki">Amagi Yacu</span><span class="t t-sw">Mayai Yetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteNaturelle.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Naturelle</span><span class="t t-en">Plain Omelette</span><span class="t t-ki">Amagi Gasanzwe</span><span class="t t-sw">Mayai ya Kawaida</span></div><div class="pt">7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Naturelle%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteOignon.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Oignon</span><span class="t t-en">Onion Omelette</span><span class="t t-ki">Amagi n'Inyanya</span><span class="t t-sw">Mayai ya Vitunguu</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Oignon%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteTomate.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Tomate</span><span class="t t-en">Tomato Omelette</span><span class="t t-ki">Amagi n'Itomate</span><span class="t t-sw">Mayai ya Nyanya</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Tomate%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteOignonTomate.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Oignon Tomate</span><span class="t t-en">Onion &amp; Tomato Omelette</span><span class="t t-ki">Amagi Oignon Tomate</span><span class="t t-sw">Mayai Vitunguu Nyanya</span></div><div class="pt">9,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Oignon%20Tomate%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteFrommage.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Fromage</span><span class="t t-en">Cheese Omelette</span><span class="t t-ki">Amagi n'Ifromage</span><span class="t t-sw">Mayai ya Jibini</span></div><div class="pt">10,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Fromage%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteChampignon.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Champignon</span><span class="t t-en">Mushroom Omelette</span><span class="t t-ki">Amagi n'Ubwoba</span><span class="t t-sw">Mayai ya Uyoga</span></div><div class="pt">10,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Champignon%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbOmeletteMixte.png" loading="lazy" onerror="this.parentElement.innerHTML='🍳'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Omelette Mixte</span><span class="t t-en">Mixed Omelette</span><span class="t t-ki">Amagi Gakozwe Hamwe</span><span class="t t-sw">Mayai Mchanganyiko</span></div><div class="pt">13,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Omelette%20Mixte%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- SOUPES -->
+    <div class="mcat" id="soupes"><h3>🍲 <span class="t t-fr">Nos Soupes</span><span class="t t-en">Our Soups</span><span class="t t-ki">Amazi yo Kurya</span><span class="t t-sw">Supu Zetu</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbSoupeAuxChevres.png" loading="lazy" onerror="this.parentElement.innerHTML='🍲'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Soupe aux Chèvres</span><span class="t t-en">Goat Soup</span><span class="t t-ki">Amazi y'Impene</span><span class="t t-sw">Supu ya Mbuzi</span></div><div class="pt">15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Soupe%20aux%20Ch%C3%A8vres%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSoupeDeBoeuf.png" loading="lazy" onerror="this.parentElement.innerHTML='🍲'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Soupe de Bœuf</span><span class="t t-en">Beef Soup</span><span class="t t-ki">Amazi y'Inka</span><span class="t t-sw">Supu ya Ng'ombe</span></div><div class="pt">15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Soupe%20de%20B%C5%93uf%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPotageLegume.png" loading="lazy" onerror="this.parentElement.innerHTML='🥣'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Potage Légume</span><span class="t t-en">Vegetable Soup</span><span class="t t-ki">Amazi y'Imboga</span><span class="t t-sw">Supu ya Mboga</span></div><div class="pt">6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Potage%20L%C3%A9gume%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- SANDWICHS -->
+    <div class="mcat" id="sandw"><h3>🥪 <span class="t t-fr">Sandwichs &amp; Spécialités</span><span class="t t-en">Sandwiches &amp; Specialties</span><span class="t t-ki">Sandwichi n'Ibindi</span><span class="t t-sw">Sandwich na Maalum</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbSandwichOmelette.png" loading="lazy" onerror="this.parentElement.innerHTML='🥪'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sandwich Omelette</span><span class="t t-en">Omelette Sandwich</span><span class="t t-ki">Sandwichi y'Amagi</span><span class="t t-sw">Sandwich ya Mayai</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sandwich%20Omelette%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSandwichFrommage.png" loading="lazy" onerror="this.parentElement.innerHTML='🥪'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sandwich Fromage</span><span class="t t-en">Cheese Sandwich</span><span class="t t-ki">Sandwichi y'Ifromage</span><span class="t t-sw">Sandwich ya Jibini</span></div><div class="pt">9,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sandwich%20Fromage%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbSandwichVide.png" loading="lazy" onerror="this.parentElement.innerHTML='🥖'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Sandwich Vide</span><span class="t t-en">Plain Bread</span><span class="t t-ki">Sandwichi Ntoya</span><span class="t t-sw">Mkate tu</span></div><div class="pt">1,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sandwich%20Vide%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbChapati.png" loading="lazy" onerror="this.parentElement.innerHTML='🫓'"/></div><div class="fb"><div class="fn">Chapati</div><div class="pt">2,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Chapati%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbLolexOmelette.png" loading="lazy" onerror="this.parentElement.innerHTML='🌯'"/></div><div class="fb"><div class="fn">Lolex Omelette</div><div class="pt">13,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Lolex%20Omelette%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbKebabAlaViande.png" loading="lazy" onerror="this.parentElement.innerHTML='🌮'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Kebab à la Viande</span><span class="t t-en">Meat Kebab</span><span class="t t-ki">Kebab y'Inyama</span><span class="t t-sw">Kebab ya Nyama</span></div><div class="pt">15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Kebab%20%C3%A0%20la%20Viande%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbAgatoki.png" loading="lazy" onerror="this.parentElement.innerHTML='🍢'"/></div><div class="fb"><div class="fn">Agatoki</div><div class="pt">6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Agatoki%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbAgatokiTumbuTumbu.png" loading="lazy" onerror="this.parentElement.innerHTML='🍢'"/></div><div class="fb"><div class="fn">Agatoki Tumbu Tumbu</div><div class="pt">6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Agatoki%20Tumbu%20Tumbu%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- DEJEUNER -->
+    <div class="mcat" id="dejeu"><h3>🍚 <span class="t t-fr">Déjeuner &amp; Accompagnements</span><span class="t t-en">Lunch &amp; Sides</span><span class="t t-ki">Isaha yo Kurya</span><span class="t t-sw">Chakula cha Mchana</span></h3><div class="sd"></div></div>
+    <div class="qr-cards">
+      <div class="qr-card"><div class="fi"><img src="images/ttbRiz.png" loading="lazy" onerror="this.parentElement.innerHTML='🍚'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Riz</span><span class="t t-en">Rice</span><span class="t t-ki">Umuceri</span><span class="t t-sw">Wali</span></div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Riz%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbFrites.png" loading="lazy" onerror="this.parentElement.innerHTML='🍟'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Frites</span><span class="t t-en">French Fries</span><span class="t t-ki">Amafriti</span><span class="t t-sw">Chips</span></div><div class="pt">7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Frites%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbPommeDeTerreNaturelle.png" loading="lazy" onerror="this.parentElement.innerHTML='🥔'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Pomme de Terre</span><span class="t t-en">Potatoes</span><span class="t t-ki">Ibirayi</span><span class="t t-sw">Viazi</span></div><div class="pt">5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Pomme%20de%20Terre%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbTrancheAnanas.png" loading="lazy" onerror="this.parentElement.innerHTML='🍌'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Banane Naturel</span><span class="t t-en">Plantain</span><span class="t t-ki">Umwishywa</span><span class="t t-sw">Ndizi</span></div><div class="pt">5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Banane%20Naturel%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbHaricot.png" loading="lazy" onerror="this.parentElement.innerHTML='🫘'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Haricot</span><span class="t t-en">Beans</span><span class="t t-ki">Ibiharage</span><span class="t t-sw">Maharagwe</span></div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Haricot%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbAmmarante.png" loading="lazy" onerror="this.parentElement.innerHTML='🥬'"/></div><div class="fb"><div class="fn">Amarante</div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amarante%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbIsombe.png" loading="lazy" onerror="this.parentElement.innerHTML='🥬'"/></div><div class="fb"><div class="fn">Isombe</div><div class="pt">4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Isombe%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbNyamna.png" loading="lazy" onerror="this.parentElement.innerHTML='🥬'"/></div><div class="fb"><div class="fn">Nyamna</div><div class="pt">6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Nyamna%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbMelange.png" loading="lazy" onerror="this.parentElement.innerHTML='🍱'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Mélange</span><span class="t t-en">Mixed Sides</span><span class="t t-ki">Ivyongerwa Vyakozwe Hamwe</span><span class="t t-sw">Mchanganyiko</span></div><div class="pt">8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20M%C3%A9lange%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card"><div class="fi"><img src="images/ttbRepasSimple.png" loading="lazy" onerror="this.parentElement.innerHTML='🍽️'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Repas Simple</span><span class="t t-en">Simple Meal</span><span class="t t-ki">Irerwa Gakozwe</span><span class="t t-sw">Chakula Rahisi</span></div><div class="pt">15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Repas%20Simple%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card s2"><div class="fi" style="height:130px;"><img src="images/ttbIgisahani.png" loading="lazy" onerror="this.parentElement.innerHTML='🎉'"/></div><div class="fb"><div class="fn"><span class="t t-fr">Plat 5 Personnes (Igisahani)</span><span class="t t-en">5-Person Platter (Igisahani)</span><span class="t t-ki">Igisahani (Abantu 5)</span><span class="t t-sw">Sahani ya Watu 5</span></div><div class="pt">50,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Igisahani%20%28Plat%205%20personnes%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+  </div><!-- end panel-food -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       DRINKS PANEL
+       ══════════════════════════════════════════════════════════ -->
+  <div class="main-panel panel-drinks" id="drinks">
+
+    <!-- Drinks subcategory tabs -->
+    <div class="cat-tabs">
+      <a href="#beers"       class="cat-tab">🍺 <span class="t t-fr">Bières</span><span class="t t-en">Beers</span><span class="t t-ki">Inzoga</span><span class="t t-sw">Bia</span></a>
+      <a href="#sodas"       class="cat-tab">🥤 <span class="t t-fr">Sodas &amp; Eaux</span><span class="t t-en">Sodas &amp; Water</span><span class="t t-ki">Amasoda</span><span class="t t-sw">Soda na Maji</span></a>
+      <a href="#juices"      class="cat-tab">🍊 <span class="t t-fr">Jus &amp; Fruits</span><span class="t t-en">Juices</span><span class="t t-ki">Amashira</span><span class="t t-sw">Juisi</span></a>
+      <a href="#ginger"      class="cat-tab">🫚 <span class="t t-fr">Gingembre</span><span class="t t-en">Ginger</span><span class="t t-ki">Tangawizi</span><span class="t t-sw">Tangawizi</span></a>
+      <a href="#energy"      class="cat-tab">⚡ <span class="t t-fr">Énergie &amp; Malt</span><span class="t t-en">Energy &amp; Malt</span><span class="t t-ki">Ingufu</span><span class="t t-sw">Nishati</span></a>
+      <a href="#traditional" class="cat-tab">🏺 <span class="t t-fr">Boissons Locales</span><span class="t t-en">Local Drinks</span><span class="t t-ki">Inzoga z'Aho</span><span class="t t-sw">Vinywaji vya Ndani</span></a>
+      <a href="#cocktails"   class="cat-tab">🍹 <span class="t t-fr">Cocktails &amp; Vins</span><span class="t t-en">Cocktails &amp; Wine</span><span class="t t-ki">Cocktails</span><span class="t t-sw">Cocktails</span></a>
+    </div>
+
+    <!-- ── BEERS (Alcoholic) ── -->
+    <div class="mcat" id="beers">
+      <h3>🍺 <span class="t t-fr">Bières — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoolisées</em></span><span class="t t-en">Beers — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoholic</em></span><span class="t t-ki">Inzoga — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Zifise Alkol</em></span><span class="t t-sw">Bia — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Zina Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/primus.png"><!--🍺--></div><div class="fb"><div class="fn">Primus 72cl (Big / Mammy)</div><div class="pt pt-b">4,000 – 5,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Primus%2072cl%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/primus 50cl.png"><!--🍺--></div><div class="fb"><div class="fn">Primus 50cl (Small / Baju)</div><div class="pt pt-b">2,800 – 4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Primus%2050cl%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/amsterBlonde.png"><!--🍺--></div><div class="fb"><div class="fn">Amstel Blonde 65cl</div><div class="pt pt-b">6,500 – 8,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amstel%20Blonde%2065cl%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/amsterBlonde50cl.png"><!--🍺--></div><div class="fb"><div class="fn">Amstel Blonde 50cl</div><div class="pt pt-b">5,500 – 7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amstel%20Blonde%2050cl%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/amsterRoyale.png"><!--🍺--></div><div class="fb"><div class="fn">Amstel Royale 50cl / 65cl</div><div class="pt pt-b">6,000 – 8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amstel%20Royale%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/amsterBock.png"><!--🍺--></div><div class="fb"><div class="fn">Amstel Bock 33cl</div><div class="pt pt-b">5,000 – 6,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amstel%20Bock%2033cl%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/nyongera.png" alt=""><!--🍺--></div><div class="fb"><div class="fn">Nyongera</div><div class="pt pt-b">4,500 – 6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Nyongera%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/mutzig.png" alt=""><!--🍺--></div><div class="fb"><div class="fn">Mutzig</div><div class="pt pt-b">5,000 – 7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Mutzig%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/primusCitron_primusBlack.png" alt=""><!--🍺--></div><div class="fb"><div class="fn">Primus Citron / Primus Black</div><div class="pt pt-b">4,200 – 5,800 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Primus%20Citron%2FBlack%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/amsterBright.png" alt=""><!--🍺--></div><div class="fb"><div class="fn">Amstel Bright</div><div class="pt pt-b">6,000 – 8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Amstel%20Bright%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/heineken.png" alt=""><!--🍺--></div><div class="fb"><div class="fn"><span class="t t-fr">Heineken (Importée)</span><span class="t t-en">Heineken (Imported)</span><span class="t t-ki">Heineken (yo Hanze)</span><span class="t t-sw">Heineken (Iliyoagizwa)</span></div><div class="pt pt-b">8,000 – 12,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Heineken%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── SODAS & WATER (Non-Alcoholic) ── -->
+    <div class="mcat" id="sodas">
+      <h3>🥤 <span class="t t-fr">Sodas &amp; Eaux — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Sans Alcool</em></span><span class="t t-en">Sodas &amp; Water — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Non-Alcoholic</em></span><span class="t t-ki">Amasoda — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Nta Alkol</em></span><span class="t t-sw">Soda na Maji — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Bila Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/coca cola.png" alt=""><!--🥤--></div><div class="fb"><div class="fn">Coca-Cola</div><div class="pt pt-b">2,500 – 4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Coca-Cola%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/orange.png" alt=""><!--🥤--></div><div class="fb"><div class="fn">Fanta Orange / Citrus</div><div class="pt pt-b">2,500 – 4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Fanta%20Orange%2FCitrus%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/sprite.png" alt=""><!--🥤--></div><div class="fb"><div class="fn">Sprite</div><div class="pt pt-b">2,500 – 4,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Sprite%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/shweepers.png" alt=""><!--🥤--></div><div class="fb"><div class="fn">Tonic Water / Schweppes</div><div class="pt pt-b">2,800 – 4,200 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tonic%20Water%2FSchweppes%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/viva.png" alt=""><!--🥤--></div><div class="fb"><div class="fn"><span class="t t-fr">Viva (Soda Local)</span><span class="t t-en">Viva (Local Soda)</span><span class="t t-ki">Viva (Isoda y'Aho)</span><span class="t t-sw">Viva (Soda ya Ndani)</span></div><div class="pt pt-b">2,300 – 3,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Viva%20Soda%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/coca_fanta.png" alt=""><!--🥤--></div><div class="fb"><div class="fn">Coca-Cola / Fanta 2L</div><div class="pt pt-b">9,000 – 12,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Coca-Cola%2FFanta%202L%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/eau_minerale.png" alt=""><!--🥤--></div><div class="fb"><div class="fn"><span class="t t-fr">Eau Minérale (Petite)</span><span class="t t-en">Bottled Water (Small)</span><span class="t t-ki">Amazi y'Icupa</span><span class="t t-sw">Maji ya Chupa</span></div><div class="pt pt-b">2,000 – 3,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Eau%20Min%C3%A9rale%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── JUICES (Non-Alcoholic) ── -->
+    <div class="mcat" id="juices">
+      <h3>🍊 <span class="t t-fr">Jus &amp; Boissons Fruitées — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Sans Alcool</em></span><span class="t t-en">Juices &amp; Fruit Drinks — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Non-Alcoholic</em></span><span class="t t-ki">Amashira y'Imbuto — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Nta Alkol</em></span><span class="t t-sw">Juisi za Matunda — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Bila Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/fursana.png" alt=""><!--🍎--></div><div class="fb"><div class="fn"><span class="t t-fr">Fursana (Jus de Pomme)</span><span class="t t-en">Fursana (Apple Juice)</span><span class="t t-ki">Fursana (Amashira ya Pome)</span><span class="t t-sw">Fursana (Juisi ya Tofaa)</span></div><div class="pt pt-b">3,000 – 5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Fursana%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/apple.png" alt=""><!--🍎--></div><div class="fb"><div class="fn"><span class="t t-fr">Jus de Pomme / Apple Punch</span><span class="t t-en">Apple Juice / Punch</span><span class="t t-ki">Amashira ya Pome</span><span class="t t-sw">Juisi ya Tofaa</span></div><div class="pt pt-b">3,000 – 5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Apple%20Punch%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/orangeJuice.png" alt=""><!--🍎--></div><div class="fb"><div class="fn"><span class="t t-fr">Jus d'Orange</span><span class="t t-en">Orange Juice</span><span class="t t-ki">Amashira ya Oranjo</span><span class="t t-sw">Juisi ya Chungwa</span></div><div class="pt pt-b">3,500 – 6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Jus%20d%27Orange%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/ananasPassionMangue.png" alt=""><!--🍎--></div><div class="fb"><div class="fn"><span class="t t-fr">Jus Frais (Ananas, Passion, Mangue, Orange)</span><span class="t t-en">Fresh Juice (Pineapple, Passion, Mango, Orange)</span><span class="t t-ki">Amashira Mashya (Inanasi, Passion, Mangue, Oranjo)</span><span class="t t-sw">Juisi Safi (Nanasi, Passion, Embe, Chungwa)</span></div><div class="pt pt-b">4,000 – 7,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Jus%20Frais%20%28pr%C3%A9cisez%20le%20fruit%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/jusMixte.png" alt=""><!--🍎--></div><div class="fb"><div class="fn"><span class="t t-fr">Jus Mixte / Smoothie</span><span class="t t-en">Mixed Juice / Smoothie</span><span class="t t-ki">Amashira Gakozwe Hamwe</span><span class="t t-sw">Juisi Mchanganyiko / Smoothie</span></div><div class="pt pt-b">5,000 – 8,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Smoothie%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── GINGER (Non-Alcoholic) ── -->
+    <div class="mcat" id="ginger">
+      <h3>🫚 <span class="t t-fr">Gingembre &amp; Spécialités — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Sans Alcool</em></span><span class="t t-en">Ginger &amp; Specialty — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Non-Alcoholic</em></span><span class="t t-ki">Tangawizi — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Nta Alkol</em></span><span class="t t-sw">Tangawizi — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Bila Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/jusTangawizi.png" alt=""><!--🫚--></div><div class="fb"><div class="fn"><span class="t t-fr">Tangawizi / Jus de Gingembre</span><span class="t t-en">Tangawizi / Ginger Juice</span><span class="t t-ki">Tangawizi / Amashira ya Gingembre</span><span class="t t-sw">Tangawizi / Juisi ya Tangawizi</span></div><div class="pt pt-b">4,000 – 6,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Tangawizi%2FGinger%20Juice%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/gengerBeer.png" alt=""><!--🍺--></div><div class="fb"><div class="fn"><span class="t t-fr">Bière au Gingembre</span><span class="t t-en">Ginger Beer</span><span class="t t-ki">Inzoga ya Tangawizi</span><span class="t t-sw">Bia ya Tangawizi</span></div><div class="pt pt-b">3,500 – 5,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Bi%C3%A8re%20au%20Gingembre%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── ENERGY & MALT (Non-Alcoholic) ── -->
+    <div class="mcat" id="energy">
+      <h3>⚡ <span class="t t-fr">Énergie &amp; Malt — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Sans Alcool</em></span><span class="t t-en">Energy &amp; Malt — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Non-Alcoholic</em></span><span class="t t-ki">Inzoga z'Ingufu — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Nta Alkol</em></span><span class="t t-sw">Vinywaji vya Nguvu — <em style="color:var(--green);font-style:normal;font-size:0.78rem;">Bila Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/kabisaEnergyDrink.png" alt=""><!--⚡--></div><div class="fb"><div class="fn">Kabisa Energy Drink</div><div class="pt pt-b">3,500 – 5,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Kabisa%20Energy%20Drink%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/azamEnergy.png" alt=""><!--⚡--></div><div class="fb"><div class="fn"><span class="t t-fr">Energy Drink Importé</span><span class="t t-en">Imported Energy Drink</span><span class="t t-ki">Inzoga z'Ingufu zo Hanze</span><span class="t t-sw">Kinywaji cha Nguvu cha Nje</span></div><div class="pt pt-b">4,000 – 6,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Energy%20Drink%20Import%C3%A9%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/vivaMalt.png" alt=""><!--🥛--></div><div class="fb"><div class="fn">Maltina / Viva Malt</div><div class="pt pt-b">3,000 – 4,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Maltina%2FViva%20Malt%20%28Table%2FLieu%3A%20________%２9" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── TRADITIONAL LOCAL DRINKS (Alcoholic) ── -->
+    <div class="mcat" id="traditional">
+      <h3>🏺 <span class="t t-fr">Boissons Locales Traditionnelles — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoolisées</em></span><span class="t t-en">Traditional Local Drinks — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoholic</em></span><span class="t t-ki">Inzoga z'Aho — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Zifise Alkol</em></span><span class="t t-sw">Vinywaji vya Jadi — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Vina Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/urwarwa.png" alt=""><!--🏺--></div><div class="fb"><div class="fn"><span class="t t-fr">Uragwa / Urwagwa (Vin de Banane)</span><span class="t t-en">Uragwa / Urwagwa (Banana Wine)</span><span class="t t-ki">Uragwa / Urwagwa (Inzoga y'Umwishywa)</span><span class="t t-sw">Uragwa / Urwagwa (Divai ya Ndizi)</span></div><div class="pt pt-b">2,000 – 4,500 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Uragwa%2FUrwagwa%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/impeke.png" alt=""><!--🏺--></div><div class="fb"><div class="fn"><span class="t t-fr">Bière de Sorgho (Impeke)</span><span class="t t-en">Sorghum Beer (Impeke)</span><span class="t t-ki">Inzoga y'Impeke</span><span class="t t-sw">Pombe ya Mtama (Impeke)</span></div><div class="pt pt-b">2,500 – 5,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Impeke%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+    <!-- ── COCKTAILS & WINE (Alcoholic) ── -->
+    <div class="mcat" id="cocktails">
+      <h3>🍹 <span class="t t-fr">Cocktails, Vins &amp; Spiritueux — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoolisés</em></span><span class="t t-en">Cocktails, Wine &amp; Spirits — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Alcoholic</em></span><span class="t t-ki">Cocktails n'Inzoga — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Zifise Alkol</em></span><span class="t t-sw">Cocktails, Divai — <em style="color:var(--red);font-style:normal;font-size:0.78rem;">Zina Pombe</em></span></h3>
+      <div class="sd sd-b"></div>
+    </div>
+    <div class="qr-cards">
+      <div class="qr-card dk"><div class="fi"><img src="images/cocktailClassic.png" alt=""><!--🍹--></div><div class="fb"><div class="fn"><span class="t t-fr">Cocktail Classique (Mojito, etc.)</span><span class="t t-en">Classic Cocktail (Mojito, etc.)</span><span class="t t-ki">Cocktail ya Kera (Mojito, n'izindi)</span><span class="t t-sw">Cocktail ya Kawaida (Mojito, n.k.)</span></div><div class="pt pt-b">8,000 – 15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Cocktail%20Classique%20%28pr%C3%A9cisez%20lequel%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/cocktailPremium.png" alt=""><!--🍹--></div><div class="fb"><div class="fn"><span class="t t-fr">Cocktail Premium</span><span class="t t-en">Premium Cocktail</span><span class="t t-ki">Cocktail Yiza</span><span class="t t-sw">Cocktail ya Hali ya Juu</span></div><div class="pt pt-b">10,000 – 18,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Cocktail%20Premium%20%28pr%C3%A9cisez%20lequel%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/vinAuVerre.png" alt=""><!--🍹--></div><div class="fb"><div class="fn"><span class="t t-fr">Vin au Verre</span><span class="t t-en">Wine (Glass)</span><span class="t t-ki">Vini (Inzabibu — Inzabibu)</span><span class="t t-sw">Divai (Glasi)</span></div><div class="pt pt-b">8,000 – 15,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Vin%20au%20verre%20%28rouge%2Fblanc%2Fros%C3%A9%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+      <div class="qr-card dk"><div class="fi"><img src="images/vinEnBouteille.png" alt=""><!--🍹--></div><div class="fb"><div class="fn"><span class="t t-fr">Vin en Bouteille</span><span class="t t-en">Wine (Bottle)</span><span class="t t-ki">Vini (Icupa)</span><span class="t t-sw">Divai (Chupa)</span></div><div class="pt pt-b">35,000 – 60,000 FB</div><a href="https://wa.me/25768857061?text=Bonjour%20TTB%2C%20je%20commande%201x%20Vin%20en%20bouteille%20%28rouge%2Fblanc%2Fros%C3%A9%29%20%28Table%2FLieu%3A%20________%29" class="ob">🛒 <span class="t t-fr">Commander</span><span class="t t-en">Order</span><span class="t t-ki">Tumako</span><span class="t t-sw">Agiza</span></a></div></div>
+    </div>
+
+  </div><!-- end panel-drinks -->
+
+</div><!-- end .wrap -->
+
+<!-- Floating WhatsApp button -->
+<a href="https://wa.me/25768857061?text=Bonjour%20TTB%20Bar%20%26%20Restaurant%2C%20je%20voudrais%20passer%20une%20commande!" class="whatsapp-float" title="Commander sur WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+</a>
+<a href="#" class="scroll-top" title="Haut de page">↑</a>
+
+<!-- Footer -->
+<div class="mf">
+  <p>© 2025 TTB Bar &amp; Restaurant — Burundi</p>
+  <p style="margin-top:6px;">Powered by <a href="https://hppeter.vercel.app" target="_blank" rel="noopener">HP PETER TECH STUDIO</a></p>
+</div>
+
+</body>
+</html>
