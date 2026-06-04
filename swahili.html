@@ -5,63 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TTB Bar & Restaurant — Burundi (Kiswahili)</title>
   <meta name="description" content="TTB Bar & Restaurant — Chakula bora, vinywaji, sherehe, mikutano na uzoefu wa kipekee nchini Burundi." />
-  <!-- Faili ya mtindo inayoshirikiwa -->
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Vitufe vya mitandao ya kijamii na ikoni halisi */
+    .social-icon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--white);
+      text-decoration: none;
+      transition: all var(--transition);
+      border: 2px solid rgba(255,255,255,0.12);
+    }
+    .social-icon-link.wa  { background: #075E54; border-color:#075E54; }
+    .social-icon-link.fb  { background: #1877F2; border-color:#1877F2; }
+    .social-icon-link.gm  { background: #EA4335; border-color:#EA4335; }
+    .social-icon-link.ph  { background: #27AE60; border-color:#27AE60; }
+    .social-icon-link:hover { transform: translateY(-3px); filter: brightness(1.15); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+    .social-contact-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    /* Sehemu ya vinywaji */
+    .drinks-badge { background: rgba(59,175,218,0.12); border: 1px solid rgba(59,175,218,0.3); color: var(--blue); }
+    .drink-card .food-img { background: linear-gradient(135deg,#0d1a22,#0a2030); }
+    .drink-card .food-badge { background: var(--blue-dark); }
+    .drink-price { color: var(--blue) !important; }
+  </style>
 </head>
 <body>
 
-  <!-- ============================================================
-       KICHWA CHA UKURASA (STICKY HEADER)
-       ============================================================ -->
-
-  <!-- Checkbox trick kwa menyu ya simu — hakuna JavaScript inayohitajika -->
   <input type="checkbox" id="nav-toggle" hidden />
 
+  <!-- ============================================================
+       KICHWA CHA UKURASA (HEADER)
+       ============================================================ -->
   <header class="site-header">
     <div class="header-inner">
-
-      <!-- ── Nembo ── -->
       <a href="swahili.html" class="logo-wrap">
-        <!-- Badilisha na nembo rasmi ya TTB -->
         <img style="border-radius:50%;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" onerror="this.style.display='none'" />
         <span class="logo-text"><span>TTB</span> Bar & Restaurant</span>
       </a>
-
-      <!-- ── Urambazaji wa kompyuta ── -->
       <nav class="main-nav" aria-label="Urambazaji mkuu">
         <a href="#nyumbani" class="active">Nyumbani</a>
         <a href="#huduma">Huduma</a>
         <a href="#menyu-kuu">Menyu</a>
-        <a href="#picha">Picha</a>
+        <!-- Picha zimeunganishwa na ukurasa wake -->
+        <a href="gallery.html">Picha</a>
         <a href="#wasiliana">Wasiliana</a>
         <a href="menu.html" class="btn btn-primary" style="padding:7px 16px;font-size:0.82rem;">📋 Agiza Sasa</a>
       </nav>
-
-      <!-- ── Vitufe vya lugha ── -->
       <div class="lang-nav">
         <a href="index.html"    class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/greatBretainIcon.png" alt="EN"> EN</a>
         <a href="francais.html" class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/franceIcon.png" alt="FR"> FR</a>
         <a href="kirundi.html"  class="lang-btn"><img style="width:15px;height:15px;border-radius:50%;" src="images/burundiIcon.png" alt="KI"> KI</a>
         <a href="swahili.html"  class="lang-btn active"><img style="width:15px;height:15px;border-radius:50%;" src="images/tanzaniaIcon.png" alt="SW"> SW</a>
       </div>
-
-      <!-- ── Kitufe cha hamburger kwa simu ── -->
       <label for="nav-toggle" class="menu-toggle" aria-label="Fungua menyu">
         <span></span><span></span><span></span>
       </label>
-
     </div>
   </header>
 
-  <!-- ══ MENYU YA SIMU ══
-       Iko NJE ya <header> — lazima iwe ndugu wa #nav-toggle
-       ili CSS iweze kuifungua inapobonyezwa.
-  -->
+  <!-- Menyu ya simu — LAZIMA iwe NJE ya header ili CSS ifanye kazi -->
   <nav class="mobile-nav" aria-label="Urambazaji wa simu">
     <a href="#nyumbani">Nyumbani</a>
     <a href="#huduma">Huduma</a>
     <a href="#menyu-kuu">Menyu</a>
-    <a href="#picha">Picha</a>
+    <a href="gallery.html">Picha</a>
     <a href="#wasiliana">Wasiliana</a>
     <a href="menu.html">📋 Agiza Sasa</a>
     <div class="lang-row">
@@ -76,131 +89,85 @@
        SEHEMU YA HERO
        ============================================================ -->
   <section class="hero" id="nyumbani">
-
-    <!-- ── Picha ya usuli wa hero ── -->
     <div class="hero-bg">
-      <!-- Badilisha na picha yako halisi ya TTB -->
       <img src="images/ttbImg11.jpeg" alt="TTB Bar & Restaurant mazingira" />
     </div>
-
-    <!-- Safu ya giza juu ya picha -->
     <div class="hero-overlay"></div>
-
     <div class="hero-content container">
       <div class="hero-badge">✨ Chakula cha Kifahari nchini Burundi</div>
-      <h1 class="hero-title">
-        Karibu <em>TTB</em><br />Bar &amp; Restaurant
-      </h1>
-      <p class="hero-sub">
-        Chakula, vinywaji, sherehe, mikutano &amp; uzoefu usiosahaulika — vyote mahali pamoja.
-      </p>
+      <h1 class="hero-title">Karibu <em>TTB</em><br />Bar &amp; Restaurant</h1>
+      <p class="hero-sub">Chakula, vinywaji, sherehe, mikutano &amp; uzoefu usiosahaulika — vyote mahali pamoja.</p>
       <div class="hero-actions">
         <a href="menu.html" class="btn btn-primary">📋 Angalia Menyu</a>
-        <!-- Badilisha nambari ya WhatsApp: 25768857061 → nambari rasmi ya TTB -->
         <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant%2C%20ningependa%20kuhifadhi%20nafasi%20kwa%20watu%20___%20tarehe%20___" class="btn btn-outline">📅 Hifadhi Nafasi</a>
       </div>
     </div>
-
     <div class="hero-scroll">Tembea Chini</div>
   </section>
 
   <!-- ============================================================
-       SEHEMU YA HUDUMA
+       HUDUMA
        ============================================================ -->
   <section class="section section-dark2" id="huduma">
     <div class="container">
       <span class="section-label">Tunachotoa</span>
       <h2 class="section-title">Huduma Zetu</h2>
       <div class="divider"></div>
-      <p class="section-subtitle">
-        Kuanzia chakula cha jioni cha faragha hadi sherehe kubwa — TTB hutoa ubora katika kila uzoefu.
-      </p>
-
+      <p class="section-subtitle">Kuanzia chakula cha faragha hadi sherehe kubwa — TTB hutoa ubora katika kila uzoefu.</p>
       <div class="services-grid">
 
-        <!-- Huduma 1 — Mkahawa -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya mkahawa -->
-            <img src="images/ttbImg16.png" alt="Mkahawa" onerror="this.parentElement.innerHTML='🍽️ [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg16.png" alt="Mkahawa" onerror="this.parentElement.innerHTML='🍽️'" /></div>
           <div class="service-icon">🍽️</div>
           <h3>Mkahawa</h3>
           <p>Furahia vyakula vya Afrika na kimataifa vilivyoandaliwa kwa ustadi katika chumba chetu cha chakula.</p>
         </div>
 
-        <!-- Huduma 2 — Bar na Cocktails -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya bar -->
-            <img src="images/ttbImg15.png" alt="Bar na Cocktails" onerror="this.parentElement.innerHTML='🍹 [Weka picha hapa]'" />
-          </div>
+          <div><img src="images/nosWhiskey.png" alt="nosWhiskey"></div>
+          <div class="service-img-wrap"><img src="images/ttbImg15.png" alt="Bar na Cocktails" onerror="this.parentElement.innerHTML='🍹'" /></div>
           <div class="service-icon">🍹</div>
           <h3>Bar &amp; Cocktails</h3>
           <p>Vinywaji vya bei ghali, cocktails za kipekee, bia za ndani na vinywaji baridi — kwa kila ladha.</p>
         </div>
 
-        <!-- Huduma 3 — Uwasilishaji wa Chakula -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya uwasilishaji -->
-            <img src="images/ttbImg17.png" alt="Uwasilishaji wa Chakula" onerror="this.parentElement.innerHTML='🛵 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg17.png" alt="Uwasilishaji wa Chakula" onerror="this.parentElement.innerHTML='🛵'" /></div>
           <div class="service-icon">🛵</div>
           <h3>Uwasilishaji wa Chakula</h3>
           <p>Furahia ladha za TTB nyumbani kwako. Uwasilishaji wa haraka na wa ubora hadi mlangoni mwako.</p>
         </div>
 
-        <!-- Huduma 4 — Keki za Siku za Kuzaliwa -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya keki -->
-            <img src="images/ttbImg14.png" alt="Keki za Siku za Kuzaliwa" onerror="this.parentElement.innerHTML='🎂 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg14.png" alt="Keki za Siku za Kuzaliwa" onerror="this.parentElement.innerHTML='🎂'" /></div>
           <div class="service-icon">🎂</div>
           <h3>Keki za Siku za Kuzaliwa</h3>
           <p>Keki za sherehe zilizotengenezwa kwa upendo — kamili kwa kila siku ya kuzaliwa na wakati maalum.</p>
         </div>
 
-        <!-- Huduma 5 — Huduma za Upishi -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya upishi -->
-            <img src="images/ttbImg13.png" alt="Huduma za Upishi" onerror="this.parentElement.innerHTML='🍱 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg13.png" alt="Huduma za Upishi" onerror="this.parentElement.innerHTML='🍱'" /></div>
           <div class="service-icon">🍱</div>
           <h3>Huduma za Upishi</h3>
           <p>Upishi wa kitaalamu kwa tukio lolote — safi, ladha na daima kwa wakati.</p>
         </div>
 
-        <!-- Huduma 6 — Sherehe na Matukio -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya sherehe -->
-            <img src="images/ttbImg18.png" alt="Sherehe na Matukio" onerror="this.parentElement.innerHTML='🎉 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg18.png" alt="Sherehe na Matukio" onerror="this.parentElement.innerHTML='🎉'" /></div>
           <div class="service-icon">🎉</div>
           <h3>Sherehe &amp; Matukio</h3>
           <p>Harusi, siku za kuzaliwa, miaka ya ndoa — tunabadilisha kila tukio kuwa kazi bora.</p>
         </div>
 
-        <!-- Huduma 7 — Vyumba vya Mikutano -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya chumba cha mikutano -->
-            <img src="images/ttbImg19.png" alt="Vyumba vya Mikutano" onerror="this.parentElement.innerHTML='💼 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/ttbImg19.png" alt="Vyumba vya Mikutano" onerror="this.parentElement.innerHTML='💼'" /></div>
           <div class="service-icon">💼</div>
           <h3>Vyumba vya Mikutano</h3>
           <p>Nafasi za kitaalamu zilizojengwa kikamilifu kwa matukio ya kampuni na makusanyiko ya kibinafsi.</p>
         </div>
 
-        <!-- Huduma 8 — Burudani -->
         <div class="service-card">
-          <div class="service-img-wrap">
-            <!-- Badilisha na picha ya burudani -->
-            <img src="images/imyidagaduro.png" alt="Burudani" onerror="this.parentElement.innerHTML='🎵 [Weka picha hapa]'" />
-          </div>
+          <div class="service-img-wrap"><img src="images/imyidagaduro.png" alt="Burudani" onerror="this.parentElement.innerHTML='🎵'" /></div>
           <div class="service-icon">🎵</div>
           <h3>Burudani</h3>
           <p>Muziki wa moja kwa moja, usiku wa DJ na matukio ya mandhari — mazingira bora kwa kila hisia.</p>
@@ -211,90 +178,75 @@
   </section>
 
   <!-- ============================================================
-       SEHEMU YA MENYU ILIYOCHAGULIWA
+       CHAKULA KILICHOCHAGULIWA
        ============================================================ -->
   <section class="section section-dark" id="menyu-kuu">
     <div class="container">
       <div class="menu-section-head">
         <div>
           <span class="section-label">Onja Tofauti</span>
-          <h2 class="section-title">Menyu Iliyochaguliwa</h2>
+          <h2 class="section-title">🍽️ Chakula Kilichochaguliwa</h2>
           <div class="divider"></div>
         </div>
         <a href="menu.html" class="btn btn-outline">Angalia Menyu Yote →</a>
       </div>
-
-      <!-- ══ Badilisha 25768857061 na nambari rasmi ya WhatsApp ya TTB ══ -->
-
       <div class="cards-row">
 
-        <!-- Kadi 1 — Pizza Royale -->
         <div class="food-card">
           <div class="food-img">
-            <!-- Badilisha na picha ya Pizza Royale -->
-            <img src="images/ttbImg8.jpeg" alt="Pizza Royale" onerror="this.parentElement.innerHTML='🍕 [Picha ya Pizza]'" />
+            <img src="images/ttbKebabAlaViande.png" alt="Kebab ya Nyama" onerror="this.parentElement.innerHTML='🌮'" />
             <span class="food-badge">Maarufu</span>
           </div>
           <div class="food-body">
-            <div class="food-name">Pizza Royale</div>
-            <div class="food-desc">Imejazwa kwa kuku wa kukaanga, pilipili, uyoga &amp; mozzarella kwenye ganda la dhahabu.</div>
+            <div class="food-name">Kebab ya Nyama</div>
+            <div class="food-desc">Nyama laini ya kukaanga, mboga safi na mchuzi wa nyumbani katika mkate mzuri.</div>
             <div class="food-footer">
-              <span class="food-price">3,500 BIF</span>
-              <!-- Badilisha nambari ya WhatsApp -->
-              <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant%2C%20ningependa%20kuagiza%201x%20Pizza%20Royale%20%28Meza%20%2F%20Mahali%20pa%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+              <span class="food-price">15,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Kebab%20ya%20Nyama%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
             </div>
           </div>
         </div>
 
-        <!-- Kadi 2 — Burger Maalum -->
         <div class="food-card">
           <div class="food-img">
-            <!-- Badilisha na picha ya Burger -->
-            <img src="images/ttbImg9.jpeg" alt="Burger Maalum" onerror="this.parentElement.innerHTML='🍔 [Picha ya Burger]'" />
+            <img src="images/ttbIgisahani.png" alt="Igisahani" onerror="this.parentElement.innerHTML='🍱'" />
             <span class="food-badge">Chaguo la Mpishi</span>
           </div>
           <div class="food-body">
-            <div class="food-name">Burger Maalum</div>
-            <div class="food-desc">Nyama ya ng'ombe yenye juisi, vitunguu vilivyokarangwa, mchuzi wa nyumba, chips za kukaanga.</div>
+            <div class="food-name">Sahani ya Watu 5 (Igisahani)</div>
+            <div class="food-desc">Sahani kubwa ya kushiriki — wali, maharagwe, mboga na nyama.</div>
             <div class="food-footer">
-              <span class="food-price">2,800 BIF</span>
-              <!-- Badilisha nambari ya WhatsApp -->
-              <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant%2C%20ningependa%20kuagiza%201x%20Burger%20Maalum%20%28Meza%20%2F%20Mahali%20pa%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+              <span class="food-price">50,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Igisahani%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
             </div>
           </div>
         </div>
 
-        <!-- Kadi 3 — Tilapia ya Kukaanga -->
         <div class="food-card">
           <div class="food-img">
-            <!-- Badilisha na picha ya Tilapia -->
-            <img src="images/ttbImg11.jpeg" alt="Tilapia ya Kukaanga" onerror="this.parentElement.innerHTML='🐟 [Picha ya Tilapia]'" />
+            <img src="images/ttbTomsonGrille.png" alt="Tomson wa Kukaanga" onerror="this.parentElement.innerHTML='🐟'" />
           </div>
           <div class="food-body">
-            <div class="food-name">Tilapia ya Kukaanga</div>
-            <div class="food-desc">Tilapia safi kutoka Ziwa Tanganyika, iliyokaangwa na mimea, ikitolewa na ugali &amp; mboga.</div>
+            <div class="food-name">Tomson wa Kukaanga</div>
+            <div class="food-desc">Samaki safi wa kukaanga na mimea, ladha tele na iliyokaangwa vizuri kwenye moto.</div>
             <div class="food-footer">
-              <span class="food-price">4,200 BIF</span>
-              <!-- Badilisha nambari ya WhatsApp -->
-              <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant%2C%20ningependa%20kuagiza%201x%20Tilapia%20ya%20Kukaanga%20%28Meza%20%2F%20Mahali%20pa%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+              <span class="food-price">20,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Tomson%20wa%20Kukaanga%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
             </div>
           </div>
         </div>
 
-        <!-- Kadi 4 — TTB Tropical -->
         <div class="food-card">
           <div class="food-img">
-            <!-- Badilisha na picha ya cocktail -->
-            <img src="images/ttbImg12.jpeg" alt="TTB Tropical" onerror="this.parentElement.innerHTML='🍹 [Picha ya Cocktail]'" />
+            <img src="images/ttbJarretRoti.png" alt="Mguu wa Kuoka" onerror="this.parentElement.innerHTML='🍖'" />
             <span class="food-badge">Sahihi</span>
           </div>
           <div class="food-body">
-            <div class="food-name">TTB Tropical</div>
-            <div class="food-desc">Mchanganyiko wa kipekee wa embe, matunda ya shauku, peremende na ramu nyeupe ya bei ghali.</div>
+            <div class="food-name">Mguu wa Kuoka</div>
+            <div class="food-desc">Mguu laini uliooka polepole kwenye tanuri, na juisi tele na ladha nyingi.</div>
             <div class="food-footer">
-              <span class="food-price">1,500 BIF</span>
-              <!-- Badilisha nambari ya WhatsApp -->
-              <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant%2C%20ningependa%20kuagiza%201x%20TTB%20Tropical%20%28Meza%20%2F%20Mahali%20pa%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+              <span class="food-price">30,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Mguu%20wa%20Kuoka%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
             </div>
           </div>
         </div>
@@ -304,84 +256,137 @@
   </section>
 
   <!-- ============================================================
-       SEHEMU YA PICHA
+       VINYWAJI VILIVYOCHAGULIWA ← SEHEMU MPYA
        ============================================================ -->
-  <section class="section section-dark3" id="picha">
+  <section class="section section-dark2" id="vinywaji-kuu">
     <div class="container">
-      <span class="section-label">Mazingira Yetu</span>
-      <h2 class="section-title">Picha</h2>
-      <div class="divider"></div>
-      <p class="section-subtitle">Muonekano wa uzoefu wa TTB — chakula, mazingira, matukio na mengi zaidi.</p>
+      <div class="menu-section-head">
+        <div>
+          <span class="section-label drinks-badge">Burudisha Nafsi Yako</span>
+          <h2 class="section-title">🍹 Vinywaji Vilivyochaguliwa</h2>
+          <div class="divider" style="background:linear-gradient(90deg,var(--blue),var(--green));"></div>
+        </div>
+        <a href="menu.html#drinks" class="btn btn-outline">Angalia Vinywaji Vyote →</a>
+      </div>
+      <div class="cards-row">
 
-      <div class="gallery-grid">
-        <!-- Badilisha kila kipande na picha halisi za TTB -->
+        <!-- Kinywaji 1 — Primus -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/primus.png" alt="Primus" onerror="this.parentElement.innerHTML='🍵'" />
+            <span class="food-badge">Ya Moto</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Primus</div>
+            <div class="food-desc">Bia maarufu ya kienyeji yenye ladha laini na ya kuburudisha.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">3,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Primus%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+            </div>
+          </div>
+        </div>
 
-        <div class="gallery-item tall">
-          <img src="images/ttbImg1.jpeg" alt="Ndani ya TTB" onerror="this.parentElement.textContent='📸 Picha 1'" />
+        <!-- Kinywaji 2 — Mvinyo -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/vinEnBouteille.png" alt="Mvinyo" onerror="this.parentElement.innerHTML='🥤'" />
+            <span class="food-badge">Sahihi</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Mvinyo</div>
+            <div class="food-desc">Mvinyo bora wenye harufu nzuri na ladha ya kuvutia kwa kila tukio.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">5,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Mvinyo%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+            </div>
+          </div>
         </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg2.jpeg" alt="Chakula cha TTB" onerror="this.parentElement.textContent='📸 Picha 2'" />
+
+        <!-- Kinywaji 3 — Amster Royale -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/amsterRoyale.png" alt="Amster Royale" onerror="this.parentElement.innerHTML='🫚'" />
+            <span class="food-badge">Maarufu</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Amster Royale</div>
+            <div class="food-desc">Bia ya kifahari yenye ladha tajiri na ubora wa hali ya juu.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">4,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Amster%20Royale%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+            </div>
+          </div>
         </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg3.jpeg" alt="Bar ya TTB" onerror="this.parentElement.textContent='📸 Picha 3'" />
+
+        <!-- Kinywaji 4 — Heineken -->
+        <div class="food-card drink-card">
+          <div class="food-img">
+            <img src="images/heineken.png" alt="Heineken" onerror="this.parentElement.innerHTML='�'" />
+            <span class="food-badge">Maalum</span>
+          </div>
+          <div class="food-body">
+            <div class="food-name">Heineken</div>
+            <div class="food-desc">Bia ya kimataifa yenye ladha safi, nyepesi na ya kipekee.</div>
+            <div class="food-footer">
+              <span class="food-price drink-price">8,000 BIF</span>
+              <a href="https://wa.me/25768857061?text=Habari%20TTB%2C%20ningependa%20kuagiza%201x%20Heineken%20%28Meza%20%2F%20Uwasilishaji%3A%20__________%29" class="btn btn-green">🛒 Agiza</a>
+            </div>
+          </div>
         </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg4.jpeg" alt="Tukio la TTB" onerror="this.parentElement.textContent='📸 Picha 4'" />
-        </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg5.jpeg" alt="Ukumbi wa TTB" onerror="this.parentElement.textContent='📸 Picha 5'" />
-        </div>
-        <div class="gallery-item tall">
-          <img src="images/ttbImg6.jpeg" alt="Cocktails za TTB" onerror="this.parentElement.textContent='📸 Picha 6'" />
-        </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg7.jpeg" alt="BBQ ya TTB" onerror="this.parentElement.textContent='📸 Picha 7'" />
-        </div>
-        <div class="gallery-item">
-          <img src="images/ttbImg8.jpeg" alt="Desserts za TTB" onerror="this.parentElement.textContent='📸 Picha 8'" />
-        </div>
+
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       SEHEMU YA MAWASILIANO
+       MAWASILIANO (CONTACT)
        ============================================================ -->
-  <section class="section section-dark2" id="wasiliana">
+  <section class="section section-dark3" id="wasiliana">
     <div class="container">
       <span class="section-label">Tupate</span>
       <h2 class="section-title">Mawasiliano &amp; Mahali</h2>
       <div class="divider"></div>
 
       <div class="info-grid">
-
         <div class="info-card">
           <div class="icon">📍</div>
           <h4>Anwani</h4>
-          <!-- Badilisha na anwani halisi -->
           <p>TTB Bar &amp; Restaurant<br />Butanyerera / Ngozi<br />Burundi</p>
         </div>
-
-        <div class="info-card">
-          <div class="icon">📞</div>
-          <h4>Simu &amp; WhatsApp</h4>
-          <!-- Badilisha na nambari rasmi -->
-          <p><a href="tel:+25768857061">+257 68857061</a></p>
-          <p><a href="https://wa.me/25768857061">Tuandikie WhatsApp</a></p>
-        </div>
-
         <div class="info-card">
           <div class="icon">🕐</div>
           <h4>Masaa ya Kufungua</h4>
-          <p>Jt – Ij: 9:00 – 23:00<br />Jmm – Jp: 10:00 – 00:00</p>
+          <p>Kila Siku<br />6:00 Asubuhi – Usiku wa Manane</p>
         </div>
-
         <div class="info-card">
           <div class="icon">✉️</div>
           <h4>Barua pepe</h4>
-          <!-- Badilisha na barua pepe rasmi -->
           <p><a href="mailto:info@ttbrestaurant.bi">info@ttbrestaurant.bi</a></p>
         </div>
+      </div>
+
+      <!-- Vitufe vya mitandao ya kijamii na ikoni halisi -->
+      <div class="social-contact-row">
+
+        <a href="https://wa.me/25768857061?text=Habari%20TTB!" class="social-icon-link wa">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm0 23.85a10.83 10.83 0 0 1-5.52-1.52l-.4-.24-4.06.95.99-3.95-.26-.41A10.85 10.85 0 1 1 16 26.85zm5.95-8.13c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+          WhatsApp
+        </a>
+
+        <a href="https://facebook.com/your-ttb-page" target="_blank" class="social-icon-link fb">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M29 16C29 9.37 23.63 4 17 4S5 9.37 5 16c0 6 4.39 10.99 10.13 11.85V19.7h-3.05V16h3.05v-2.65c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88V16h3.33l-.53 3.7H18.9v8.15C24.61 26.99 29 22 29 16z"/></svg>
+          Facebook
+        </a>
+
+        <a href="mailto:info@ttbrestaurant.bi" class="social-icon-link gm">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M26 6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm0 2-10 7L6 8h20zm0 16H6V10l10 7 10-7v14z"/></svg>
+          Tuandikie
+        </a>
+
+        <a href="tel:+25768857061" class="social-icon-link ph">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M26.5 20.5c-1.5-1-3.1-1.6-4.5-.6l-1.8 1.3c-.5.3-1.1.2-1.5-.2-1.3-1.2-3.4-3.3-4.6-4.6-.4-.4-.5-1-.2-1.5l1.3-1.8c1-1.4.4-3-.6-4.5L13 6.7C11.9 5.2 10 5 8.7 6.2L7 7.8C5 9.8 5.5 13.2 8 17.5c2 3.5 4.8 6.4 8 8.5 4.5 2.8 7.8 2.8 9.7.8l1.5-1.7c1.2-1.3 1-3.1-.2-4.1l-1.5-1.1-1 1z"/></svg>
+          Piga Simu
+        </a>
 
       </div>
     </div>
@@ -394,37 +399,40 @@
     <div class="footer-inner">
       <div class="footer-grid">
 
-        <!-- Safu ya nembo na maelezo -->
         <div class="footer-brand">
-          <div style="display:flex;flex-direction:row;align-items:center;column-gap:10px;margin-bottom:14px;">
-            <img style="width:50px;height:50px;border-radius:50%;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" onerror="this.style.display='none'" />
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <img style="width:50px;height:50px;border-radius:50%;" src="images/ttbBarRestaurantLogo.jpeg" alt="TTB Logo" />
             <span class="logo-text"><span>TTB</span> Bar &amp; Restaurant</span>
           </div>
           <p>Chakula cha kifahari, cocktails, sherehe &amp; burudani moyoni mwa Burundi. Kila ziara ni uzoefu usiosahaulika.</p>
-          <!-- Badilisha viungo vya mitandao ya kijamii -->
-          <div class="social-row">
-            <a href="#" class="social-btn" title="Facebook">📘</a>
-            <a href="#" class="social-btn" title="Instagram">📸</a>
-            <a href="#" class="social-btn" title="Twitter / X">🐦</a>
-            <a href="#" class="social-btn" title="TikTok">🎵</a>
-            <a href="https://wa.me/25768857061" class="social-btn" title="WhatsApp">💬</a>
+          <div class="social-row" style="margin-top:14px;">
+            <a href="https://facebook.com/your-ttb-page" class="social-btn" title="Facebook">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M29 16C29 9.37 23.63 4 17 4S5 9.37 5 16c0 6 4.39 10.99 10.13 11.85V19.7h-3.05V16h3.05v-2.65c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88V16h3.33l-.53 3.7H18.9v8.15C24.61 26.99 29 22 29 16z"/></svg>
+            </a>
+            <a href="https://wa.me/25768857061" class="social-btn" title="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+            </a>
+            <a href="mailto:info@ttbrestaurant.bi" class="social-btn" title="Barua pepe">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M26 6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm0 2-10 7L6 8h20zm0 16H6V10l10 7 10-7v14z"/></svg>
+            </a>
+            <a href="tel:+25768857061" class="social-btn" title="Simu">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M26.5 20.5c-1.5-1-3.1-1.6-4.5-.6l-1.8 1.3c-.5.3-1.1.2-1.5-.2-1.3-1.2-3.4-3.3-4.6-4.6-.4-.4-.5-1-.2-1.5l1.3-1.8c1-1.4.4-3-.6-4.5L13 6.7C11.9 5.2 10 5 8.7 6.2L7 7.8C5 9.8 5.5 13.2 8 17.5c2 3.5 4.8 6.4 8 8.5 4.5 2.8 7.8 2.8 9.7.8l1.5-1.7c1.2-1.3 1-3.1-.2-4.1l-1.5-1.1-1 1z"/></svg>
+            </a>
           </div>
         </div>
 
-        <!-- Viungo vya Haraka -->
         <div class="footer-col">
           <h5>Viungo vya Haraka</h5>
           <ul>
             <li><a href="#nyumbani">Nyumbani</a></li>
             <li><a href="#huduma">Huduma</a></li>
             <li><a href="#menyu-kuu">Menyu</a></li>
-            <li><a href="#picha">Picha</a></li>
+            <li><a href="gallery.html">Picha</a></li>
             <li><a href="menu.html">Agiza Mtandaoni</a></li>
             <li><a href="#wasiliana">Wasiliana</a></li>
           </ul>
         </div>
 
-        <!-- Huduma -->
         <div class="footer-col">
           <h5>Huduma</h5>
           <ul>
@@ -437,32 +445,24 @@
           </ul>
         </div>
 
-        <!-- Masaa -->
         <div class="footer-col">
           <h5>Masaa ya Kufungua</h5>
           <div class="footer-hours">
-            <span><strong>Jt – Ij</strong><br />9:00 – 23:00</span>
-            <span><strong>Jumamosi</strong><br />10:00 – Usiku wa manane</span>
-            <span><strong>Jumapili</strong><br />10:00 – Usiku wa manane</span>
+            <span><strong>Kila Siku</strong><br />6:00 Asubuhi – Usiku wa Manane</span>
           </div>
         </div>
 
       </div>
-
-      <!-- Mstari wa chini wa miguu -->
       <div class="footer-bottom">
         <span>© 2025 TTB Bar &amp; Restaurant. Haki zote zimehifadhiwa.</span>
-        <!-- Badilisha na kiungo rasmi cha HP PETER TECH STUDIO -->
-        <span>Imetengenezwa na <a href="https://hppeter.vercel.app" target="_blank" rel="noopener">HP PETER TECH STUDIO</a></span>
+        <span>Imetengenezwa na <a href="https://hppeter830s.github.io/hppetertechstudio/" target="_blank" rel="noopener">HP PETER TECH STUDIO</a></span>
       </div>
     </div>
   </footer>
 
-  <!-- ── Kitufe cha WhatsApp kinachoelea ── -->
-  <!-- Badilisha nambari na nambari rasmi ya TTB -->
-  <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant!" class="whatsapp-float" title="Zungumza kwenye WhatsApp">💬</a>
-
-  <!-- ── Rudi juu ── -->
+  <a href="https://wa.me/25768857061?text=Habari%20TTB%20Bar%20%26%20Restaurant!" class="whatsapp-float" title="Zungumza kwenye WhatsApp">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.46 1.64 6.33L3 29l6.84-1.6A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm5.95 15.72c-.33-.16-1.93-.95-2.23-1.06-.3-.1-.52-.16-.73.16-.22.33-.84 1.06-1.03 1.28-.19.22-.38.24-.7.08-.33-.16-1.38-.51-2.63-1.62-.97-.87-1.63-1.94-1.82-2.27-.19-.33-.02-.51.14-.67.15-.14.33-.38.49-.57.16-.19.22-.33.33-.54.1-.22.05-.41-.02-.57-.08-.16-.73-1.77-1-2.43-.26-.64-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.41-.3.33-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.32c.16.22 2.28 3.47 5.52 4.87.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.93-.79 2.2-1.55.27-.76.27-1.41.19-1.55-.08-.14-.3-.22-.62-.38z"/></svg>
+  </a>
   <a href="#nyumbani" class="scroll-top" title="Rudi juu">↑</a>
 
 </body>
